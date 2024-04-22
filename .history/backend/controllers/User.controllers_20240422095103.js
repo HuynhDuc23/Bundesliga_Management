@@ -1,0 +1,17 @@
+import User from "../models/User.model.js";
+// GET ALL USERS
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    if (!user) {
+      return res.status(404).json({
+        message: "Cant not get all users!",
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      name: error.name,
+      message: error.message,
+    });
+  }
+};
