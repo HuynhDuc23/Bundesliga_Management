@@ -5,6 +5,6 @@ import {
 } from "../controllers/User.controllers.js";
 import { verifyToken } from "../middlewares/Permission.middlewares.js";
 const usersRouter = Router();
-usersRouter.get("/", verifyToken, getAllUsers);
+usersRouter.get("/", getAllUsers); // verifyToken
 usersRouter.delete("/:id", deleteUserById);
 export default usersRouter;

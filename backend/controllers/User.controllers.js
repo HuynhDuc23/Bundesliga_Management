@@ -2,8 +2,26 @@ import User from "../models/User.model.js";
 // GET ALL USERS
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find();
-    if (!users) {
+    // const users = await User.find();
+    // bao nhieu trang , bao nhieu san pham , sap xep theo gi , sap xep theo chieu nao
+    // query = ?
+    const {
+      _page = 1, // trang 1 neu ho khong nhap tu nguoi dung
+      _limit = 10, // toi da 10 trang neu ho khong nhap
+      _sort = "createdAt", // sap xep theo ngay tao neu ho khong nhap sap xep theo gi
+      _order = "asc",
+    } = req.query;
+    const options = {
+      page: _page,
+      limit: _limit,
+      sort: {
+        // sap xep theo nhieu tieu chi khac nhau
+        [_sort]: _order === "asc" ? 1 : -1, // createdAt: _order === "asc" ? 1 : -1,
+      },
+    };
+    const users = await User.paginate({}, options);
+    console.log(users);
+    if (!users.docs || users.docs.length === 0) {
       return res.status(404).json({
         message: "Cant not get all users!",
       });
