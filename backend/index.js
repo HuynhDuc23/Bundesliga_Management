@@ -5,25 +5,30 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
 import router from "./routers/index.js";
+import teamRoute from "./routers/team.router"
 import connection from "./utils/Connection.js";
 const app = express();
 
 app.use(cors()); // chan cors khoi loi
 app.use(cookieParser()); // tao cookie va gan cookie
 app.use(express.json()); // Sử dụng middleware express.json() để phân tích dữ liệu JSON từ các yêu cầu HTTP
-
 // env
-dotenv.config();
-const URL = process.env.URL;
-const PORT = process.env.PORT;
+// dotenv.config();
+// const URL = process.env.URL;
+// const PORT = process.env.PORT;
 
 // connect db
-connection(URL);
-
+connection("mongodb://localhost:27017/node_football",{
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 // routes : dinh tuyen router
 app.use("/api/v1", router);
-
-app.listen(PORT, () => {
+app.use("/",teamRoute);
+app.get("/",(req,rep) => {
+  rep.send("Hello world")
+})
+app.listen(5050, () => {
   console.log("Server is running");
 });
 
