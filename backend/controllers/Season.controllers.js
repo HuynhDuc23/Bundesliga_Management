@@ -1,15 +1,15 @@
 import Season from "../models/Season.model"
 export const getAllSeason = async (req, res) => {
     try {
-      const Season = await Season.find();
-      if (!Season) {
+      const season = await Season.find();
+      if (!season) {
         return res.status(404).json({
           message: "Cant not get all Season!",
         });
       }
       return res.status(200).json({
         message: "Success!",
-        data: Season,
+        data: season,
       });
     } catch (error) {
       return res.status(500).json({
@@ -18,6 +18,38 @@ export const getAllSeason = async (req, res) => {
       });
     }
   };
+export const getOneSeason = async (req,res) => {
+    try {
+      const {idSeason} = req.params;
+      const season = await Season.findById(idSeason)
+      if(!season){
+        return res.status(404).json({
+          message: " Cannot find season"
+        })
+      }
+      return res.status(200).json({
+        message:"Success!",
+        datas:season
+      })
+    } catch (error) {
+        return res.status(500).json({
+          name: error.name,
+          message: error.message
+        })
+    }
+  };
+  export const getSeasonById = async (req, res) => {
+    const { idSeason } = req.params;
+    try {
+        const season = await Season.findById(idSeason);
+        if (!season) {
+            return res.status(404).json({ message: 'Season not found' });
+        }
+        return res.status(200).json({ message: 'Success', data: season });
+    } catch (error) {
+        return res.status(500).json({ message: 'Failed to get season' });
+    }
+};
   export const createSeason = async (req, res) => {
       try {
         const {
@@ -35,25 +67,13 @@ export const getAllSeason = async (req, res) => {
       } catch (error) {
         return res.status(500).json({message:'Failed create'})
       }
-    }
-    export const getSeasonById = async (req, res) => {
-      const { seasonId } = req.params;
-      try {
-          const season = await Season.findById(seasonId);
-          if (!season) {
-              return res.status(404).json({ message: 'Season not found' });
-          }
-          return res.status(200).json({ message: 'Success', data: season });
-      } catch (error) {
-          return res.status(500).json({ message: 'Failed to get season' });
-      }
-  };
+    };
   export const updateSeason = async (req, res) => {
-    const { seasonId } = req.params;
+    const { idSeason } = req.params;
     const { year_start, year_end } = req.body;
     try {
         const updatedSeason = await Season.findByIdAndUpdate(
-            seasonId,
+            idSeason,
             { year_start, year_end },
             { new: true }
         );
@@ -66,9 +86,9 @@ export const getAllSeason = async (req, res) => {
     }
 };
   export const deleteSeason = async (req, res) => {
-  const { seasonId } = req.params;
+  const { idSeason } = req.params;
   try {
-      const deletedSeason = await Season.findByIdAndDelete(seasonId);
+      const deletedSeason = await Season.findByIdAndDelete(idSeason);
       if (!deletedSeason) {
           return res.status(404).json({ message: 'Season not found' });
       }

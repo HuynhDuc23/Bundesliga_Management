@@ -1,15 +1,15 @@
-import TeamSeason from "../models/Team_season.model"
-export const getAllSeason = async (req, res) => {
+import TeamSeason from "../models/Teamseason.model"
+export const getAllTeamSeason = async (req, res) => {
     try {
-      const TeamSeason = await TeamSeason.find();
-      if (!Season) {
+      const teamSeason = await TeamSeason.find();
+      if (!teamSeason) {
         return res.status(404).json({
-          message: "Cant not get all Season!",
+          message: "Cant not get all TeamSeason!",
         });
       }
       return res.status(200).json({
         message: "Success!",
-        data: Season,
+        data: teamSeason,
       });
     } catch (error) {
       return res.status(500).json({
