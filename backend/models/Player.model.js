@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+
+import mongoose, { Schema } from "mongoose";
 const playerSchema = new mongoose.Schema(
     {
         name:{
@@ -31,7 +32,7 @@ const playerSchema = new mongoose.Schema(
             required:true
         },
         team:{
-            type: Schema.Types.ObjectId, ref: 'Team'
+            type: Schema.Types.ObjectId,ref:'Team'
         }
     }
 )

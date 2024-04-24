@@ -5,7 +5,6 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 
 import router from "./routers/index.js";
-import teamRoute from "./routers/team.router"
 import connection from "./utils/Connection.js";
 const app = express();
 
@@ -24,7 +23,6 @@ connection("mongodb://localhost:27017/node_football",{
 });
 // routes : dinh tuyen router
 app.use("/api/v1", router);
-app.use("/",teamRoute);
 app.get("/",(req,rep) => {
   rep.send("Hello world")
 })
