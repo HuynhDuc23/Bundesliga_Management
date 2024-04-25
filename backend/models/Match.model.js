@@ -5,7 +5,7 @@ const matchSchema = new mongoose.Schema(
         type: Date,
         required: true
     },
-    ID_season:[{type:Schema.Types.ObjectId,ref:'Season'}],
+    ID_season:{type:Schema.Types.ObjectId,ref:'Season'},
     card:{
         type:String,
     },

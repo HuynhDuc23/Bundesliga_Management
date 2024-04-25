@@ -8,6 +8,7 @@ import router from "./routers/index.js";
 import connection from "./utils/Connection.js";
 const app = express();
 
+
 app.use(cors()); // chan cors khoi loi
 app.use(cookieParser()); // tao cookie va gan cookie
 app.use(express.json()); // Sử dụng middleware express.json() để phân tích dữ liệu JSON từ các yêu cầu HTTP

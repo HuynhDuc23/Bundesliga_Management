@@ -1,7 +1,7 @@
-import Match from "../models/Match.model";
+import Match from "../models/Match.model.js";
 
 export const getAllMatches = async (req, res) => {
-  try {
+  try { 
     const matches = await Match.find();
     if (!matches) {
       return res.status(404).json({

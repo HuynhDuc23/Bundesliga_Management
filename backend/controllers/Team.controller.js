@@ -1,4 +1,4 @@
-import Team from "../models/Team.model"
+import Team from "../models/Team.model.js"
 export const getAllTeam = async (req, res) => {
     try {
       const teams = await Team.find();

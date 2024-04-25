@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 const matchTeamSchema = new mongoose.Schema({
     ID_match: {
         type: Schema.Types.ObjectId,
@@ -13,19 +13,13 @@ const matchTeamSchema = new mongoose.Schema({
         default: 0
     },
     score: {
-        homeTeam: {
-            type: Number,
-            default: 0
-        },
-        awayTeam: {
-            type: Number,
-            default: 0
-        }
+        type: Number,
+        default: 0
     },
     stadium: {
         type: String,
         required: true
     },
 });
-matchTeamSchema.plugin(mongoosePaginate);
-export default mongoose.model("TeamSeason", teamSeasonSchema);
+// matchTeamSchema.plugin(mongoosePaginate);
+export default mongoose.model("MatchTeam", matchTeamSchema);
