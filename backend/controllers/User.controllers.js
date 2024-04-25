@@ -6,7 +6,8 @@ import {
   registerValid,
   createUserValid,
 } from "../validations/User.validations.js";
-// GET ALL USERS
+
+// GET ALL USERS WITH ROLE
 export const getAllUsers = async (req, res) => {
   try {
     // const users = await User.find();
@@ -25,6 +26,7 @@ export const getAllUsers = async (req, res) => {
         // sap xep theo nhieu tieu chi khac nhau
         [_sort]: _order === "asc" ? 1 : -1, // createdAt: _order === "asc" ? 1 : -1,
       },
+      populate: "role", // Populate thông tin role cho mỗi user
     };
     const users = await User.paginate({}, options);
     console.log(users);
@@ -45,7 +47,7 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-// GET USERS BY ID
+// GET USERS BY ID WITH ROLE
 export const getUsersById = async (req, res) => {
   try {
     const data = await User.findById(req.params.id).populate("role");
@@ -69,23 +71,23 @@ export const getUsersById = async (req, res) => {
 // CREATE USER WITH ROLE
 export const createUser = async (req, res) => {
   try {
-    // const { error } = createUserValid.validate(req.body, {
-    //   abortEarly: false,
-    // });
-    // if (error) {
-    //   const errors = error.details.map((error) => error.message);
-    //   return res.status(400).json({
-    //     message: errors,
-    //   });
-    // }
+    const { error } = createUserValid.validate(req.body, {
+      abortEarly: false,
+    });
+    if (error) {
+      const errors = error.details.map((error) => error.message);
+      return res.status(400).json({
+        message: errors,
+      });
+    }
     const salt = await bcrypt.genSalt(10); // tao chuoi ngau hien
     const hashed = await bcrypt.hash(req.body.password, salt); // ma hoa + them chuoi
     const user = await User.create({
       username: req.body.username,
       password: hashed,
       email: req.body.email,
+      role: req.body.role,
     });
-    // const user = await User.create(req.body);
     if (!user) {
       return res.status(400).json({
         message: "Cant not create user",
@@ -108,7 +110,7 @@ export const createUser = async (req, res) => {
   }
 };
 
-// DELETE USER BY ID
+// DELETE USER BY ID -> TRONG ROLE CX MAT LUON QUYEN CUA NO
 export const deleteUserById = async (req, res) => {
   try {
     const data = await User.findByIdAndDelete(req.params.id);
@@ -117,6 +119,14 @@ export const deleteUserById = async (req, res) => {
         message: `Cant no delete with ${req.params.id}`,
       });
     }
+    // xoa di role cua id do trong bang role
+    // Xóa id của người dùng khỏi danh sách người dùng của từng vai trò trong bảng vai trò
+    await Role.updateMany(
+      { user: req.params.id }, // Tìm các vai trò có người dùng có id tương ứng
+      { $pull: { user: req.params.id } } // Loại bỏ id của người dùng khỏi danh sách người dùng của vai trò
+    );
+
+    // thong bao
     return res.status(200).json({
       message: `Delete Sucess ${req.params.id}`,
       data: data,
@@ -127,4 +137,8 @@ export const deleteUserById = async (req, res) => {
       message: error.message,
     });
   }
+};
+// UPDATE USER AND ROLE
+export const updateUser = (req, res) => {
+  // user name , password , confirm password , email
 };

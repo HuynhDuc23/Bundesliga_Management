@@ -14,6 +14,6 @@ authRouter.post("/register", registerUser);
 authRouter.post("/signin", loginUser);
 //REFRESH
 authRouter.post("/refresh", requestRefreshToken);
-// LOGOU
+// LOGOUT
 authRouter.post("/logout", verifyToken, logoutUser);
 export default authRouter;
