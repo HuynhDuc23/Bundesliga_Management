@@ -1,7 +1,7 @@
 import Player from "../models/Player.model.js"
 export const getAllPlayer = async (req, res) => {
     try {
-      const player = await Player.find();
+      const player = await Player.find().populate('team');
       if (!player) {
         return res.status(404).json({
           message: "Cant not get all player!",

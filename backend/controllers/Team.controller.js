@@ -40,14 +40,13 @@ export  const getAllTeam = async (req, res) => {
   }
   export  const createTeam = async (req, res) => {
       try {
-        const {name,nameArena,logo,imgArena,description,players} = req.body;
+        const {name,nameArena,logo,imgArena,description} = req.body;
         const newTeam = new Team({
             name,
             nameArena,
             logo,
             imgArena,
             description,
-            players
         });
         await newTeam.save();
         return res.status(201).json({
@@ -61,14 +60,13 @@ export  const getAllTeam = async (req, res) => {
   export const updateTeam = async (req,res) => {
     try {
       const {id} = req.params;
-      const {name,nameArena,logo,imgArena,description,players} = req.body
+      const {name,nameArena,logo,imgArena,description} = req.body
       const team = await Team.findById(id);
       if(name) team.name = name;
       if(nameArena) team.nameArena = nameArena;
       if(logo) team.logo = logo;
       if(imgArena) team.imgArena = imgArena;
       if(description) team.description = description;
-      (players.length) ? team.players = [team.players,...players] : team.players = team.players 
       await team.save();
       return res.status(200).json({
         message:'Team updated successfully',
