@@ -1,4 +1,5 @@
 import Player from "../models/Player.model.js"
+import Team from "../models/Team.model.js"
 export const getAllPlayer = async (req, res) => {
     try {
       const player = await Player.find().populate('team');
@@ -65,6 +66,7 @@ export const getAllPlayer = async (req, res) => {
         const {
         name,heigh,weight,shirtNumber,shirtSize,goal,team
         } = req.body;
+
         const newPlayer = new Player({
             name,
             heigh,

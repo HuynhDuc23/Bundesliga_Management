@@ -1,4 +1,5 @@
 import Team from "../models/Team.model.js"
+import Player from "../models/Player.model.js"
 export  const getAllTeam = async (req, res) => {
     try {
       const teams = await Team.find();
@@ -76,6 +77,29 @@ export  const getAllTeam = async (req, res) => {
       res.status(500).json({
         message:'Failed updated',
         error:error.message
+      })
+    }
+  }
+  export const deleteTeamById = async (req,res) => {
+    try {
+      const {id} = req.params;
+      const deleted = await Team.findByIdAndDelete(id);
+      if(!deleted){
+        return res.status(404).json({
+          message:"Team not found"
+        })
+      }
+      const result = await Player.updateMany({team:id},{$set:{team:null}})
+      if(!result) return res.status(500).json({
+        message:"Deleted failed"
+      })
+      return res.status(200).json({
+        message: "Delete successfully"
+      })
+     } catch (error) {
+      return res.status(500).json({
+        nameError: error.name,
+        message: error.message
       })
     }
   }
