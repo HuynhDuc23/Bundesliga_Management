@@ -82,7 +82,7 @@ export const getAllPlayer = async (req, res) => {
             player: newPlayer
         });
       } catch (error) {
-        return res.status(500).json({message:'Failed create'})
+        return res.status(500).json({message:'Failed create',name_error : error.name,error_message: error.message})
       }
 }
 export const updatePlayer = async (req,res) => {

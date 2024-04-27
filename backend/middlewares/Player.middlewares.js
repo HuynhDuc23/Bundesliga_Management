@@ -1,12 +1,21 @@
+import mongoose from "mongoose";
 import Team from "../models/Team.model.js"
+const {Types} = mongoose;
 export const checkTeam = async (req,res,next) => {
     try {
         const {team} = req.body;
-        const result = await Team.findById(new ObjId(team));
+        const teamObjectId = Types.ObjectId.isValid(team) ? new Types.ObjectId(team) : null;
+        const result = await Team.findById(teamObjectId);
+        if (!teamObjectId) {
+            return res.status(400).json({
+                name: "error",
+                message: "Invalid team ID format!",
+                data: team,
+            });
+        }
         if(!result) return res.status(404).json({
             name:"error",
             message:"Team does not exit!",
-            data:team,
         })
         next();
     } catch (error) {
