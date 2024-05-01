@@ -1,0 +1,113 @@
+body{
+    background-color: black;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.center{
+    display: flex;
+    justify-content: center;
+}
+.w-1080{
+    width: 1080px;
+}
+.w-960{
+    width: 960px;
+}
+.hello{
+    color: red;
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px 0 0px;
+    background-color: rgb(53, 44, 44);
+}
+.header__brand{
+    display: flex;
+    align-items: center;
+}
+.header_brand--logo{
+    height: 70px;
+    width: 70px;
+    margin-right: 20px;
+}
+.header__menu{
+    display: flex;
+    align-items: center;
+}
+.header__brand--name{
+    font-size: 18px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+.header__menu--item{
+    color: #fff;
+    font-size: 14;
+    margin: 0px 10px 0px;
+}
+.header__menu--link{
+    text-decoration: none;
+}
+.footer{
+    height: 40px;
+    background-color: rgb(53, 44, 44);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Footer */
+.footer__title{
+    font-size: 16px;
+    color: #fff;
+}
+/* Slider */
+.slider {
+    position: absolute;
+    top: 43.5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    height: 450px;
+    width: 750px;
+    margin: 26px auto 26px;
+  }
+  
+  .slides {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+  .content__title{
+    color: #fff;
+  }
+
+  .slides img {
+    height: 100%;
+    width: 100%;
+  }
+.pos-btn{
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.pos-btn:hover{
+    opacity: 0.7;
+}
+.prev{
+    position: absolute;
+    top: 45%;
+    left: 0;
+    
+}
+.next{
+    position: absolute;
+    top: 45%;
+    right: 0;
+}
+.prev__icon{
+    color: #fff;
+}
+  /* Content index */
+  .content{
+    margin: 540px 0px 20px 0px;
+  }

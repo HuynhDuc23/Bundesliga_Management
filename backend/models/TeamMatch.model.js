@@ -7,7 +7,7 @@ const teamMatchSchema = new mongoose.Schema(
             required:true
         },
         match:{
-            type:Schema.Types.ObjectId,ref:'Team',
+            type:Schema.Types.ObjectId,ref:'Match',
             required:true
         },
         score:{

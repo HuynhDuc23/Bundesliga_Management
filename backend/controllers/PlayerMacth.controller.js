@@ -2,7 +2,7 @@ import Player from "../models/Player.model.js"
 import Team from "../models/Team.model.js"
 import PlayerMatch from "../models/PlayerMatch.model.js"
 import Match from "../models/Match.model.js"
-
+import TeamMatch from "../models/TeamMatch.model.js"
 export const createPlayerMatch = async(req,res) => {
     try {
         const {match,player,events} = req.body
@@ -34,8 +34,14 @@ export const getDetailPlayerMatch = async(req,res) => {
     if(!match) return res.status(404).json({
         message: "Can be not found match"
     })
+    const teamMatch = await TeamMatch.find()
+    if(!teamMatch) return res.status(404).json({
+        message: "No teams in Match"
+    })
+    // const team1 = teamMatch[0].team
+    // const team2 = teamMath[1].team
     const playerMatch = await PlayerMatch.find({match:id}).populate('player');
-    if(!playerMatch) return res.status(500).json({
+    if(!playerMatch) return res.status(404).json({
         message: "No players in Match"
     })
     if(playerMatch[0].events){
@@ -63,7 +69,7 @@ export const getDetailPlayerMatch = async(req,res) => {
         });
     }
     return res.status(200).json({
-        playerMatch,
+        teamMatch,
         goals,
         fouls
     })
