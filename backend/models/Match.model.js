@@ -6,9 +6,7 @@ const matchSchema = new mongoose.Schema(
         required: true
     },
     ID_season:{type:Schema.Types.ObjectId,ref:'Season'},
-    card:{
-        type:String,
-    },
+    
     description:{
         type:String,
     }

@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   getAllMatchTeams,
   getMatchTeamById,
-//   createMatch,
+  createMatchTeam,
 //   updateMatch,
 //   deleteMatch,
 } from "../controllers/Match_Team.controllers.js";
@@ -12,7 +12,7 @@ const matchTeamRouter = Router();
 
 matchTeamRouter.get("/",getAllMatchTeams);
 matchTeamRouter.get("/:id", getMatchTeamById);
-// matchTeamRouter.post("/", createMatch);
+matchTeamRouter.post("/", createMatchTeam);
 // matchTeamRouter.put("/:id", updateMatch);
 // matchTeamRouter.delete("/:id", deleteMatch);
 

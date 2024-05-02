@@ -11,8 +11,8 @@ import {
 const matchRouter = Router();
 
 matchRouter.get("/",getAllMatches);
-matchRouter.get("/:id", getMatchById);
 matchRouter.post("/", createMatch);
+matchRouter.get("/:id", getMatchById);
 matchRouter.put("/:id", updateMatch);
 matchRouter.delete("/:id", deleteMatch);
 

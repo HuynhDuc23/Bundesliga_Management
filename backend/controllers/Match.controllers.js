@@ -38,11 +38,10 @@ export const getMatchById = async (req, res) => {
 
 export const createMatch = async (req, res) => {
   try {
-    const { date, ID_season, card, description } = req.body;
+    const { date, ID_season, description } = req.body;
     const newMatch = new Match({
       date,
       ID_season,
-      card,
       description,
     });
     await newMatch.save();
@@ -58,10 +57,10 @@ export const createMatch = async (req, res) => {
 export const updateMatch = async (req, res) => {
   try {
     const { id } = req.params;
-    const { date, ID_season, card, description } = req.body;
+    const { date, ID_season, description } = req.body;
     const updatedMatch = await Match.findByIdAndUpdate(
       id,
-      { date, ID_season, card, description },
+      { date, ID_season, description },
       { new: true }
     );
     if (!updatedMatch) {
