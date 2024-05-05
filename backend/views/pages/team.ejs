@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('../utils/link.ejs')%>
+</head>
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <%- include ('../partials/header') %>
+            <div id="list" data ="<%=JSON.stringify(data)%>"></div>
+            <div class="teams_search_containt">
+                <input class="teams_search" type="text" id="searchInput" placeholder="Enter name">
+                <div class="teams_search_box--icon">
+                    <img class="teams_search--icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAotJREFUSEvllkuojVEYhp8j15QYUMdlJPeQg+QeEykDI7coIU5kgIGYGaEwMCARQ7klBgwkJXIXEkXuuU9IIUm+N99/Wv69//N/HXt3BtZk7/b+3vdda32XdzXQTquhnXSJCHcEJgJDgV7AI+A68OZfNt2acD9gM7AY6FFF5CqwEzjelg0UCS8CDgDdAqRngfnAl0BsS0g14eUuqqBfwGHgNHAHeGffm4DJwCpggDPdBKYB36LieeHRwG2gA/ABmAPcKCDrChwEFvr/ew2zuq3CZ4DZDp4KXCohUuEpZgLw025nCPA0Ip6euA/w3kH7rWpXRgiAMX5LClcxbo3gUuEFnk/hJgFXIgQecx8YAVwAZkZwqfB6bw/hugNfIwQeow5QUb4F+kZwqfBGYJuDuti1/YgQeIxwwn8GekZwqfBS4JCDBgOPIwQecwSY5+lRmkpXKjwKuOuINcCeUvSfgE5elBqn+6zXmyO4fB+/suHR3/KlT536e4BkA7DD48JFmRdeC+x2El37shLhscBlayHVxDG/7sBeqXCnzj4Qxjv6lBXMOuBZjk1CK2yWb/cO0PAYBDwPqVIpLFxv4DwwMiFRn97zXI4DtDGNTC3NZ+X5hPFtMcN4GBEvcie50i4/lcZi0dKGlpgzKc+yTy2ZyibgRWsbKHsIyH1EOMuLTb6sh8A54Chwy8mHWX4fJEJ6JMitnhSJlwlHbi2LOWnWOTcBaIPT3UoreGoprPaTU6lGsqW2nGLd8TKvXEthcSs1MoqBiZCue4bPhpafay2ciV+zKdaYiL92+/yY/VYPYXGrpzVYsmuXR8ur63rijHy4efNFfxjoNfrXqteJMxFZ5KdqrVFv4cJ2/P+EfwPso2Yfp6I9kgAAAABJRU5ErkJggg=="/>
+                </div>
+            </div>
+            <div class="teams_content" id="listTeam">
+            <% data.forEach(item =>{ %>
+                <a class="teams_content__link" href="/api/v1/team/<%=item._id%>">
+                    <div class="teams_content__boxitem">
+                        <img class="teams_content__boxitem--img" src="https://upload.wikimedia.org/wikipedia/vi/thumb/c/c7/Logo_Real_Madrid.svg/716px-Logo_Real_Madrid.svg.png" alt="">
+                        <p class="teams_content__boxitem--name" style="color: #fff;"><%= item.name %></p>
+                    </div>
+                </a>
+            <%})%>              
+        </div>
+        </div>
+    </div>
+    <script src="../../script/searchTeamsByName.js"></script>
+</body>
+</html>

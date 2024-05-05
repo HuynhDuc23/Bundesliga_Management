@@ -1,24 +1,34 @@
+document.addEventListener('DOMContentLoaded', function(){
 
-function autoSlide() {
-    // Lấy tất cả các slide và nút prev, next
     const slides = document.querySelectorAll('.slides__img');
     const prevBtn = document.querySelector('.prev');
     const nextBtn = document.querySelector('.next');
-    // Tìm slide hiện tại
     let currentIndex = 0;
-    slides.forEach((slide, index) => {
-        if (slide.classList.contains('active')) {
-            currentIndex = index;
-        }
-    });
-
-    // Chuyển slide tiếp theo
-    let nextIndex = currentIndex + 1;
-    if (nextIndex >= slides.length) {
-        nextIndex = 0;
+    // Hàm chuyển đến slide trước đó
+    function prevSlide() {
+        const newIndex = (currentIndex === 0) ? slides.length - 1 : currentIndex - 1;
+        changeSlide(newIndex);
     }
-    // Hiển thị slide tiếp theo và ẩn slide hiện tại
-    slides[currentIndex].classList.remove('active');
-    slides[nextIndex].classList.add('active');
-}
-setInterval(autoSlide, 2000);
+    
+    // Hàm chuyển đến slide kế tiếp
+    function nextSlide() {
+        const newIndex = (currentIndex === slides.length - 1) ? 0 : currentIndex + 1;
+        changeSlide(newIndex);
+    }
+    
+    // Hàm thay đổi slide hiện tại
+    function changeSlide(newIndex) {
+        slides[currentIndex].classList.remove('active');
+        slides[newIndex].classList.add('active');
+        currentIndex = newIndex;
+    }
+    
+    // Sự kiện khi nhấn nút "Back"
+    prevBtn.addEventListener('click', prevSlide);
+    
+    // Sự kiện khi nhấn nút "Next"
+    nextBtn.addEventListener('click', nextSlide);
+    
+    // Tự động chuyển slide
+    setInterval(nextSlide, 2000);
+})

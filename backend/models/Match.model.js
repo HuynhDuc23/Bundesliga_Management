@@ -2,8 +2,8 @@
 import mongoose, { Mongoose, Schema } from "mongoose";
 const matchSchema = new mongoose.Schema(
     {
-        session:{
-            type: Schema.Types.ObjectId,ref:'Session'
+        season:{
+            type: Schema.Types.ObjectId,ref:'Season'
         },
         date:{
             type:Date,
@@ -17,6 +17,10 @@ const matchSchema = new mongoose.Schema(
         stadium:{
             type:String,
             required:true
+        },
+        status:{
+            type:Number,
+            default:0
         }
     }
 )

@@ -2,14 +2,14 @@ import Team from "../models/Team.model.js"
 import Player from "../models/Player.model.js"
 export  const getAllTeam = async (req, res) => {
     try {
-      const teams = await Team.find();
+      const teams = await Team.find().sort({name:'asc'});
       if (!teams) {
         return res.status(404).json({
           message: "Cant not get all teams!",
         });
       }
-      return res.status(200).json({
-        message: "Success!",
+      return res.status(200).render("pages/team",{
+        title: "Teams",
         data: teams,
       });
     } catch (error) {
@@ -19,6 +19,26 @@ export  const getAllTeam = async (req, res) => {
       });
     }
   };
+  export const getTeamsByName = async (req,res) => {
+    try {
+      const name = req.query.name.toString() || "";
+      const page = req.query.page || 0;
+      const skip = page ? (page-1)*perPage : 0
+      const perPage = 9;  
+      const teams = await Team.find({name:{$regex:name,$options:'i'}}).skip(skip).limit(perPage).sort({name:'asc'});
+      if(!teams) return res.status(404).json({
+        message: "Cannot found team"
+      })
+      return res.status(200).json({
+        data:teams
+      })
+    } catch (error) {
+      res.status(500).json({
+        errorName: error.name,
+        message:error.message
+      })
+    }
+  }
   export const getOneTeam = async (req,res) => {
     try {
       const {id} = req.params;

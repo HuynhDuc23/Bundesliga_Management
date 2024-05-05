@@ -14,10 +14,9 @@ const teamMatchSchema = new mongoose.Schema(
             type:Number,
             required:true
         },
-        status:{
-            type:String,
-            enum: ['completed','paused'],
-            required:true
+        goal:{
+            type:Number,
+            default:0
         }
     }
 )

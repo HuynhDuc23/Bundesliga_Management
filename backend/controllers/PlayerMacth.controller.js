@@ -27,6 +27,7 @@ export const createPlayerMatch = async(req,res) => {
 }
 export const getDetailPlayerMatch = async(req,res) => {
     try{
+    
     const goals = [];
     const fouls = [];
     const {id} = req.params;
