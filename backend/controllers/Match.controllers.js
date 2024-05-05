@@ -20,47 +20,47 @@ export const getAllMatches = async (req, res) => {
   }
 };
 
+// tìm match theo id của season
 export const getMatchById = async (req, res) => {
     try {
-      const { id } = req.params;
-      const match = await Match.findById(id);
+      const { ID_season } = req.params;
+      const match = await Match.find({ID_season: ID_season});
       if (!match) {
-        return res.status(404).json({ message: "Match not found" });
+        return res.status(404).json({ match: "Match not found" });
       }
-      return res.status(200).json({
-        message: "Success",
-        data: match,
+      return res.render("match",{
+        match
       });
     } catch (error) {
       return res.status(500).json({ message: "Failed to get match" });
     }
   };  
 
-export const createMatch = async (req, res) => {
-  try {
-    const { date, ID_season, description } = req.body;
-    const newMatch = new Match({
-      date,
-      ID_season,
-      description,
-    });
-    await newMatch.save();
-    return res.status(201).json({
-      message: "Match created successfully",
-      match: newMatch,
-    });
-  } catch (error) {
-    return res.status(500).json({ message: "Failed to create match" });
-  }
-};
+// export const createMatch = async (req, res) => {
+//   try {
+//     const { date, ID_season, description } = req.body;
+//     const newMatch = new Match({
+//       date,
+//       ID_season,
+//       description,
+//     });
+//     await newMatch.save();
+//     return res.status(201).json({
+//       message: "Match created successfully",
+//       match: newMatch,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({ message: "Failed to create match" });
+//   }
+// };
 
 export const updateMatch = async (req, res) => {
   try {
     const { id } = req.params;
-    const { date, ID_season, description } = req.body;
+    const { date, stadium, description } = req.body;
     const updatedMatch = await Match.findByIdAndUpdate(
       id,
-      { date, ID_season, description },
+      { date, stadium, description },
       { new: true }
     );
     if (!updatedMatch) {

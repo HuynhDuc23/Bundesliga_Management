@@ -1,0 +1,77 @@
+<!-- match.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match</title>
+    <%- include('utils/link.ejs') %>
+        <style>
+            .season-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+            }
+
+            .season-id {
+                width: calc(25% - 20px);
+                background-color: #f0f0f0;
+                border-radius: 20px;
+                padding: 20px;
+                text-align: center;
+                margin-bottom: 20px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                cursor: pointer;
+            }
+
+            .season-name {
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+            .season-year {
+                font-size: 12px;
+                margin-bottom: 10px;
+            }
+        </style>
+</head>
+
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <%- include('header') %>
+    
+            <div class="season-container">
+                <% data.forEach(function(season) { %>
+                    <div class="season-id" id="<%= season._id %>">
+                        <p class="season-name">
+                            <%= season.name %>
+                        </p>
+                        <p class="season-year">
+                            <%= season.yearStart %> - <%= season.yearEnd %>
+                        </p>
+                    </div>
+                <% }); %>
+            </div>
+    
+            <%- include('footer') %>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const seasons = document.querySelectorAll('.season-id');
+            seasons.forEach(season => {
+                season.addEventListener('click', function () {
+                    const seasonId = season.getAttribute('id'); // Lấy id của mùa bóng
+                    window.location.href = `/api/v1/match/?id=${seasonId}`; // Chuyển đến trang match với id của mùa bóng
+                });
+            });
+        });
+    </script>
+    
+</body>
+
+</html>

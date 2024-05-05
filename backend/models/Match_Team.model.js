@@ -8,7 +8,7 @@ const matchTeamSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Team'
     },
-    status: {
+    goal: {
         type: Number,
         default: 0
     },
@@ -16,10 +16,5 @@ const matchTeamSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    stadium: {
-        type: String,
-        required: true
-    },
 });
-// matchTeamSchema.plugin(mongoosePaginate);
 export default mongoose.model("MatchTeam", matchTeamSchema);

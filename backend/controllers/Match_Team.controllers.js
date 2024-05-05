@@ -6,17 +6,15 @@ export const getAllMatchTeams = async (req, res) => {
         const matchteams = await MatchTeam.find();
         if (!matchteams) {
             return res.status(404).json({
-                message: "Can't get all MatchTeam"
+                matchteams: "Can't get all MatchTeam"
             });
         }
-        return res.status(200).json({
-            message: "Success!",
-            data: matchteams,
+        return res.render("match",{
+            matchteams
         });
     } catch (error) {
         return res.status(500).json({
-            message: error.name,
-            error: error.message,
+            message: error.message,
         });
     }
 }
@@ -42,14 +40,14 @@ export const createMatchTeam = async (req, res) => {
     const session = await Match.startSession();
     session.startTransaction();
     try {
-        const { date, ID_season, description } = req.body;
+        const { date, ID_season, stadium, description } = req.body;
         
         // Tạo mới đối tượng match
         const newMatch = new Match({
             date,
             ID_season,
             description,
-            card: { yellowcard: 0, redcard: 0 },
+            stadium,
         });
 
         // Lưu đối tượng match vào cơ sở dữ liệu và lấy _id của nó
@@ -57,12 +55,10 @@ export const createMatchTeam = async (req, res) => {
         const matchId = match._id;
 
         // Tạo mới đối tượng matchteam thứ nhất với idmatch đã lấy
-        const { stadium } = req.body;
         const matchteam1 = new MatchTeam({
             ID_match: matchId,
             status: 0,
             score: 0,
-            stadium
         });
 
         // Tạo mới đối tượng matchteam thứ hai với idmatch đã lấy
@@ -71,7 +67,6 @@ export const createMatchTeam = async (req, res) => {
             ID_match: matchId,
             status: 0,
             score: 0,
-            stadium
         });
 
         // Lưu cả hai đối tượng matchteam vào cơ sở dữ liệu

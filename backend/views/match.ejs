@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match</title>
+    <%- include('utils/link.ejs')%>
+</head>
+
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <!-- Include Header -->
+            <%- include('header') %>
+            <!-- Form to add a new match -->
+            <form action="/add-match" method="POST" class="match-form">
+                <div class="input-container">
+                    <div>
+                        <label for="homeTeam">Home Team:</label>
+                        <!-- Sử dụng dropdown cho việc chọn đội bóng -->
+                        <select id="homeTeam" name="homeTeam" required>
+                            <!-- Thêm các tùy chọn cho đội bóng -->
+                            <option value="">Chọn đội bóng</option>
+                            <option value="team1">Đội bóng 1</option>
+                            <option value="team2">Đội bóng 2</option>
+                            <!-- Thêm các tùy chọn khác nếu cần -->
+                        </select>
+                    </div>
+                    <div>
+                        <label for="awayTeam">Away Team:</label>
+                        <!-- Sử dụng dropdown cho việc chọn đội bóng -->
+                        <select id="awayTeam" name="awayTeam" required>
+                            <!-- Thêm các tùy chọn cho đội bóng -->
+                            <option value="">Chọn đội bóng</option>
+                            <option value="team1">Đội bóng 1</option>
+                            <option value="team2">Đội bóng 2</option>
+                            <!-- Thêm các tùy chọn khác nếu cần -->
+                        </select>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <div>
+                        <label for="stadium">Stadium:</label>
+                        <input type="text" id="stadium" name="stadium" required>
+                    </div>
+                    <div>
+                        <label for="matchTime">Match Time:</label>
+                        <input type="datetime-local" id="matchTime" name="matchTime" required>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit">Add Match</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Include Footer -->
+    <%- include('footer') %>
+</body>
+
+</html>

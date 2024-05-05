@@ -3,10 +3,13 @@ import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
-
 import router from "./routers/index.js";
 import connection from "./utils/Connection.js";
+import path from 'path'
+const __dirname = path.resolve();
 const app = express();
+app.set('view engine','ejs')
+app.use(express.static(path.join(__dirname,'public')));
 
 
 app.use(cors()); // chan cors khoi loi
@@ -23,6 +26,16 @@ connection(URL);
 
 // routes : dinh tuyen router
 app.use("/api/v1", router);
+
+app.get("/",(req,rep) => {
+  const data = __dirname;
+  rep.render("index",{data})
+})
+
+// app.get("/api/v1/match/:id",(req,rep) => {
+//   const data = __dirname;
+//   rep.render("match",{data})
+// })
 
 app.listen(PORT, () => {
   console.log("Server is running");

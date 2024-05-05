@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('utils/link.ejs')%>
+</head>
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <%- include ('header') %>
+            <div class="slider">
+                <div class="slides">
+                  <img class="slides__img active"src="/img/slider1.jpg" alt="Image 1">
+                  <img class="slides__img" src="/img/slider2.jpg" alt="Image 1">
+                  <img class="slides__img" src="/img/slider3.jpg" alt="Image 1">
+                  <img class="slides__img" src="/img/slider4.jpg" alt="Image 1">
+                  <img class="slides__img" src="/img/slider5.jpg" alt="Image 1">
+                  <img class="slides__img" src="/img/slider6.jpg" alt="Image 1">
+                </div>  
+                <button class="prev pos-btn"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAARZJREFUSEvtlsFqwkAURc9AIBFKi9/RjSjdS//AVd3UlZ9Q3OuHuHPXvSsV8acMZHxlIOK0GPOiZELRrIecuYd5d8bQ0Gca4vIABzP/f1ULPO2JJgnZzECmVXZT4hy6NvAGsoyxAwOpBn41WOAlJVoD3SNIYNsi69cGFnhOibZA5wQRa2AYY79rARdADwY+tFC3sUqqBdq5Xj+pg45i7EKT9LhGDc6hO+DV03sVVJ24ACoGPqsmVScuggqMW9h5Fb3+2lLVjYHdLhtR7ZWDO9FhD9cfuGurcOPkwc+1Vr0FUgKvtzI9uLskVkDPK5RNgn3XjFjpOF36ye/eDnQt+sn3RF8J2TTYQ0CjtGjNTaof4CoG7k/1D79Teh9u/LznAAAAAElFTkSuQmCC"/></button>
+                <button class="next pos-btn"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAARZJREFUSEvt1jFOwzAYhuH3r1s1HAqQSsUJurH1IqwcoiwwMXOCjtClC+dAokhtJEtGlqgaQZD9Oy5WpWRN4iffF9uJUOiQQi49/G/Nn0bVDkY7hrcV9k7gs0s90YkdnNWYZ5ArB6sKO+mCR8NbhkuBi31KB68VdiqwSUkeDdeYmYMnkEED98k9/qHFo2E/cI25cfDQxIH1GHupxVVwTlwNN/BHkOb9quRJsMe3mLnAogX3s/099M6T4QMu9z+QtzH2PIRngH+lPi78R9VRqG8oKfH3smqbXFHvNwnOtZZViXOhqsRtW2bqrqWCWz4SLxX2WrtV7pdedNXFPov+SYv8CIS2QO356Kq1A4eu7+FQQ9nOF6v6C4t8aR9yEywtAAAAAElFTkSuQmCC"/></button>
+        </div>
+        <div class="content">
+            <p class="content__title">Abc</p>
+        </div>
+    </div>
+    </div>
+        <%- include ('footer') %> 
+</body>
+</html>
