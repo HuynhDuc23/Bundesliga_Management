@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('../utils/link.ejs')%>
+</head>
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <%- include ('../partials/header') %>
+            <div class="content">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search...">
+                    <button class="search-button">Search</button>
+                </div>  
+                <ul class="season-list">
+                    <li class="season-item">
+                        <span class="season-header">Name</span>
+                        <span class="season-header">Start Year</span>
+                        <span class="season-header">End Year</span>
+                        <a href="/api/v1/season/newSeason/<%= data[0]._id %>" class="season-detail-btn">New Season</a>
+                    </li>
+                    <% data.forEach(function(season) { %>
+                        <li class="season-item">
+                            <span class="season-name"><%= season.name %></span>
+                            <span class="season-year"><%= season.yearStart %></span>
+                            <span class="season-year"><%= season.yearEnd %></span>
+                            <a href="/api/v1/season/<%= season._id %>" class="season-detail-btn">Chi tiết</a>
+                        </li>
+                    <% }); %>
+                    
+                </ul>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+</html>

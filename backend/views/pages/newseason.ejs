@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('../utils/link.ejs')%>
+</head>
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <%- include ('../partials/header') %>
+            <div class="season-info">
+                <h2 class="name-season">Create New Season</h2>
+                <form action="/create-season" method="POST">
+                    <label for="seasonName">Name of Season:</label>
+                    <input type="text" id="seasonName" name="seasonName" required>           
+                    <label for="yearBegin">Year Begin:</label>
+                    <input type="number" id="yearBegin" name="yearBegin" required>                    
+                    <label for="yearEnd">Year End:</label>
+                    <input type="number" id="yearEnd" name="yearEnd" required>
+                    <button type="submit">Create Season</button>
+                
+                    <button type="button" onclick="addTeam()">Thêm Team</button>
+                </form>
+            </div>
+            <!-- Hiển thị danh sách đội bóng -->
+            <div class="team-list">
+                <h3></h3>
+                <ul>
+                    <% data.teams.forEach(function(team) { %>
+                        <li>
+                            <img src="<%= team.logo %>" alt="<%= team.name %> Logo">
+                            <span><%= team.name %></span>
+                            <button class="delete-button" data-team-id="<%= team.id %>">Xóa</button>
+                        </li>
+                    <% }); %>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Xử lý sự kiện khi bấm nút "Xóa"
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', function() {
+                this.parentNode.remove();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -11,21 +11,21 @@ export const createSeason = async (req, res) => {
         const data = new Season(req.body);
         if(data.yearStart > yearEndNew.yearStart && data.yearEnd > yearEndNew.yearEnd) {
             await data.save();
-            return res.status(201).json({
-                message: "Create Season successfully",
-                data: dataSeasonSortYearEnd,
-              });
-        }
-        else {
-          return res.status(400).json({
-            message: "Cant not create Season ",
-            yearEndNew : yearEndNew,
+            return res.status(201).render("season", {
+              message: "Create Season successfully",
+              data: dataSeasonSortYearEnd,
           });
         }
-      } catch (error) {
-        return res.status(500).json({
-          message: error.message,
+        else {
+          return res.status(400).render("error", {
+            message: "Cannot create Season",
+            yearEndNew: yearEndNew,
         });
+        }
+      } catch (error) {
+        return res.status(500).render("error", {
+          message: error.message,
+      });
       }
   };
   // get all season
@@ -33,14 +33,12 @@ export const createSeason = async (req, res) => {
     try {
       const data = await Season.find();
       if (!data) {
-        return res.status(400).json({
-          message: "Cant not get all season",
-        });
+        return res.status(400).render('error', { data:"Cant not get all season" });
       }
-      return res.status(200).json({
-        message: "Success",
-        data: data,
-      });
+      data.sort((a, b) => b.yearEnd - a.yearEnd);
+      return res.render("pages/season", {
+        data
+    });
     } catch (error) {
       return res.status(500).json({
         message: error.message,
@@ -53,25 +51,51 @@ export const createSeason = async (req, res) => {
       // Lấy thông tin về mùa bóng đá
       const dataSeason = await Season.findById(req.params.id);
       if (!dataSeason) {
-        return res.status(400).json({
-          message: "Không thể lấy thông tin mùa bóng đá bằng ID",
-        });
+        return res.status(400).render('error', { data: "mùa không được tìm thấy " });
       }
   
       // Lấy thông tin về các đội trong mùa
       const dataTeamSeasons = await TeamSeason.find({ season: req.params.id });
       if (!dataTeamSeasons || dataTeamSeasons.length === 0) {
-        return res.status(400).json({
-          message: "Không có đội nào tham gia trong mùa này",
-        });
+        return res.status(400).render('error', { data: "không có team nào trong mùa này" });
       }
   
       // Lấy thông tin về từng đội
       const teamIds = dataTeamSeasons.map((teamSeason) => teamSeason.team);
       const dataTeams = await Team.find({ _id: { $in: teamIds } });
 
-      return res.status(200).json({
-        message: "Thành công",
+      return res.status(200).render('pages/teaminseason',{
+        data: {
+          season: dataSeason,
+          teams: dataTeams,
+        },
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  };
+   // get team in season by id
+   export const getTeamInSeasonById = async (req, res) => {
+    try {
+      // Lấy thông tin về mùa bóng đá
+      const dataSeason = await Season.findById(req.params.id);
+      if (!dataSeason) {
+        return res.status(400).render('error', { data: "mùa không được tìm thấy " });
+      }
+  
+      // Lấy thông tin về các đội trong mùa
+      const dataTeamSeasons = await TeamSeason.find({ season: req.params.id });
+      if (!dataTeamSeasons || dataTeamSeasons.length === 0) {
+        return res.status(400).render('error', { data: "không có team nào trong mùa này" });
+      }
+  
+      // Lấy thông tin về từng đội
+      const teamIds = dataTeamSeasons.map((teamSeason) => teamSeason.team);
+      const dataTeams = await Team.find({ _id: { $in: teamIds } });
+
+      return res.status(200).render('pages/newseason',{
         data: {
           season: dataSeason,
           teams: dataTeams,
