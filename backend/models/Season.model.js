@@ -15,6 +15,7 @@ const seasonSchema = new mongoose.Schema({
     }
 });
 
+
 const Season = mongoose.model("Season", seasonSchema);
 
 export default Season;
