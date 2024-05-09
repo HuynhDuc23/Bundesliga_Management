@@ -159,7 +159,7 @@ export const createSeason = async (req, res) => {
       }
   
       // Lấy thông tin về mùa bóng đá
-      console.log(rep.params.id);
+      console.log(req.params.id);
       console.log(req.body);
       const dataSeason = await Season.findById(req.params.id);
       if (!dataSeason) {
@@ -167,17 +167,15 @@ export const createSeason = async (req, res) => {
           message: "Không tìm thấy mùa bóng đá",
         });
       }
-      // Cập nhật và trả về tài liệu sau khi cập nhật
-      const updatedSeason = await Season.updateOne({ $set: req.body });
-      if (!updatedSeason) {
-        return res.status(404).json({
-          message: "Không tìm thấy mùa bóng đá để cập nhật",
-        });
-      }
+      dataSeason.name = req.body.name.trim();
+      dataSeason.yearStart = req.body.yearStart;
+      dataSeason.yearEnd = req.body.yearEnd;
+      await dataSeason.save();
+      
   
-      return res.status(200).json({
+      return res.status(201).json({
         message: "Cập nhật mùa bóng đá thành công",
-        data: updatedSeason,
+        data: dataSeason,
       });
     } catch (error) {
       return res.status(500).json({
@@ -188,8 +186,9 @@ export const createSeason = async (req, res) => {
   // get name season
   export const getName = async (req,res)=> {
     let name = req.body.name.trim();
-    let search = Season.find({name: {$regex: new RegExp('^'+name+'.*','i')}}).exec();
-    //limtsearch
-    search = (await search).slice(0,10);
-    res.send({name : search});
+    const searchResults = await Season.find({ name: { $regex: new RegExp('^' + name + '.*', 'i') } })
+      .select('_id name yearStart yearEnd')
+      .limit(10)
+      .exec();
+    res.send({name : searchResults});
   };
