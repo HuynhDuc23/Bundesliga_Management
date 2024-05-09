@@ -3,6 +3,7 @@ import {
   getAllMatches,
   getMatchById,
   // createMatch,
+  getTeamInSeasonById,
   updateMatch,
   deleteMatch,
 } from "../controllers/Match.controllers.js";
@@ -10,8 +11,9 @@ import {
 
 const matchRouter = Router();
 
+matchRouter.get("/:id",getTeamInSeasonById);
 matchRouter.get("/",getAllMatches);
-matchRouter.get("/:id", getMatchById);
+// matchRouter.get("/:id", getMatchById);
 // matchRouter.post("/", createMatch);
 matchRouter.put("/:id", updateMatch);
 matchRouter.delete("/:id", deleteMatch);

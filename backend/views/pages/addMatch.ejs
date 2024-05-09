@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match</title>
+    <%- include('../utils/link.ejs')%>
+</head>
+
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <!-- Include Header -->
+            <%- include('../partials/header') %>
+            <!-- Form to add a new match -->
+            <form action="/api/v1/matchteam/add-match" method="POST" class="match-form" id="addMatchForm">
+                <input type="hidden" id="ID_season" name="ID_season" value="<%= data.ID_season %>">
+                <div class="input-container">
+                    <div>
+                        <label for="teamId1">Home Team:</label>
+                        <!-- Sử dụng dropdown cho việc chọn đội bóng -->
+                        <select id="teamId1" name="teamId1" required>
+                            <option value="">Chọn đội bóng </option>
+                            <% data.teams.forEach(function(season) { %>
+                                <option value="<%=season._id%>">
+                                    <!-- <img src="<%=season.logo%>" alt=""> -->
+                                   <p><%=season.name%></p>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="teamId2">Away Team:</label>
+                        <select id="teamId2" name="teamId2" required>
+                            <option value="">Chọn đội bóng</option>
+                            <% data.teams.forEach(function(season) { %>
+                                <option value="<%=season._id%>">
+                                    <!-- <img src="<%=season.logo%>" alt=""> -->
+                                   <p><%=season.name%></p>
+                                </option>
+                            <% }); %>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-container">
+                    <div>
+                        <label for="stadium">Stadium:</label>
+                        <input type="text" id="stadium" name="stadium" required>
+                    </div>
+                    <div>
+                        <label for="matchTime">Match Time:</label>
+                        <input type="datetime-local" id="date" name="date" required>
+                    </div>
+                </div>
+                <div class="input-description">
+                    <div>
+                        <label for="description">Description:</label>
+                        <textarea type="text" id="description" name="description"></textarea>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit">Add Match</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Include Footer -->
+    <%- include('../partials/footer') %>
+</body>
+
+</html>

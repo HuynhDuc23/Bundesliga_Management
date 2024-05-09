@@ -12,7 +12,7 @@ const matchTeamRouter = Router();
 
 matchTeamRouter.get("/",getAllMatchTeams);
 matchTeamRouter.get("/:id", getMatchTeamById);
-matchTeamRouter.post("/", createMatchTeam);
+matchTeamRouter.post("/add-match", createMatchTeam);
 // matchTeamRouter.put("/:id", updateMatch);
 // matchTeamRouter.delete("/:id", deleteMatch);
 

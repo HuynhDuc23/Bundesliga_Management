@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Match</title>
-    <%- include('utils/link.ejs') %>
+    <%- include('../utils/link.ejs') %>
         <style>
             .season-container {
                 display: flex;
@@ -41,7 +41,7 @@
 <body>
     <div class="center">
         <div class="w-1080">
-            <%- include('header') %>
+            <%- include('../partials/header') %>
     
             <div class="season-container">
                 <% data.forEach(function(season) { %>
@@ -56,7 +56,7 @@
                 <% }); %>
             </div>
     
-            <%- include('footer') %>
+            <%- include('../partials/footer') %>
         </div>
     </div>
     
@@ -66,7 +66,7 @@
             seasons.forEach(season => {
                 season.addEventListener('click', function () {
                     const seasonId = season.getAttribute('id'); // Lấy id của mùa bóng
-                    window.location.href = `/api/v1/match/?id=${seasonId}`; // Chuyển đến trang match với id của mùa bóng
+                    window.location.href = `/api/v1/match/${seasonId}`; // Chuyển đến trang match với id của mùa bóng
                 });
             });
         });

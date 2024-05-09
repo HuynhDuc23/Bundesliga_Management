@@ -10,6 +10,8 @@ import matchteamRouter from "./match_Team.router.js";
 import seasonRouter from "./season.router.js";
 
 const router = express.Router();
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }))
 router.use("/auth", authRouter);
 router.use("/user", usersRouter);
 router.use("/role", roleRouter);
