@@ -5,29 +5,42 @@ import Team from "../models/Team.model.js";
 // CREATE season
 export const createSeason = async (req, res) => {
     try {
-        const dataSeason = await Season.find();
-        const dataSeasonSortYearEnd = dataSeason.sort((a,b) => new Date(b.yearEnd) - new Date(a.yearEnd));
-        const yearSEndNew = dataSeasonSortYearEnd[0];
-        const data = new Season(req.body);
-        if(data.yearStart > yearEndNew.yearStart && data.yearEnd > yearEndNew.yearEnd) {
-            await data.save();
-            return res.status(201).render("season", {
-              message: "Create Season successfully",
-              data: dataSeasonSortYearEnd,
-          });
+        // Fetch all seasons
+        let dataSeason = await Season.find();
+
+        // Sort seasons by yearEnd in descending order
+        dataSeason = dataSeason.sort((a, b) => new Date(b.yearEnd) - new Date(a.yearEnd));
+        
+        // Get the most recent season
+        const mostRecentSeason = dataSeason[0];
+
+        console.log(req.body);
+
+        // Create a new season with the provided data
+        const newSeason = new Season(req.body);
+
+        // Validate the new season's start and end year
+        if (newSeason.yearStart > mostRecentSeason.yearStart && newSeason.yearEnd > mostRecentSeason.yearEnd) {
+            // Save the new season to the database
+            await newSeason.save();
+            return res.status(201).json({
+                message: "Create Season successfully",
+                data: newSeason,
+            });
+        } else {
+            // Return a 400 error if the season's years are invalid
+            return res.status(400).json({
+                message: "Cannot create Season",
+                data: mostRecentSeason,
+            });
         }
-        else {
-          return res.status(400).render("error", {
-            message: "Cannot create Season",
-            yearEndNew: yearEndNew,
+    } catch (error) {
+        // Return a 500 error if something goes wrong
+        return res.status(500).json({
+            message: error.message,
         });
-        }
-      } catch (error) {
-        return res.status(500).render("error", {
-          message: error.message,
-      });
-      }
-  };
+    }
+};
   // get all season
   export const getAllSeason = async (req, res) => {
     try {
