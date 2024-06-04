@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('../utils/link.ejs')%>
+</head>
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <%- include ('../partials/header') %>
+            <div class="season-info">
+                <h2 class="name-season">
+                    <%= data.season.name %> (Năm: <%= data.season.yearStart %> - <%= data.season.yearEnd %>)
+                    <button class="delete-season-button" onclick="deleteSeason('<%= data.season._id %>')">Delete</button>
+                </h2>
+            </div>
+          <!-- Hiển thị danh sách đội bóng -->
+          <div class="team-list">
+            <h3>Danh sách đội bóng:</h3>
+            <ul>
+                <% data.teams.forEach(function(team) { %>
+                    <li>
+                        <img src="<%= team.logo %>" alt="<%= team.name %> Logo">
+                        <span><%= team.name %></span>
+                        <a href="link_to_team_details" class="view-button">Xem</a>
+                    </li>
+                <% }); %>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/script/teamInSeason.js"></script>
+</html>
