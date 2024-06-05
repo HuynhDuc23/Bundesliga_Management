@@ -46,7 +46,7 @@ export const createSeason = async (req, res) => {
     try {
       const data = await Season.find();
       if (!data) {
-        return res.status(400).render('error', { data:"Cant not get all season" });
+        return res.status(400).render('pages/error', { data:"Cant not get all season" });
       }
       data.sort((a, b) => b.yearEnd - a.yearEnd);
       return res.render("pages/season", {
@@ -64,13 +64,13 @@ export const createSeason = async (req, res) => {
       // Lấy thông tin về mùa bóng đá
       const dataSeason = await Season.findById(req.params.id);
       if (!dataSeason) {
-        return res.status(400).render('error', { data: "mùa không được tìm thấy " });
+        return res.status(400).render('pages/error', { data: "mùa không được tìm thấy " });
       }
   
       // Lấy thông tin về các đội trong mùa
       const dataTeamSeasons = await TeamSeason.find({ season: req.params.id });
       if (!dataTeamSeasons || dataTeamSeasons.length === 0) {
-        return res.status(400).render('error', { data: "không có team nào trong mùa này" });
+        return res.status(400).render('pages/error', { data: "không có team nào trong mùa này" });
       }
   
       // Lấy thông tin về từng đội
@@ -95,13 +95,13 @@ export const createSeason = async (req, res) => {
       // Lấy thông tin về mùa bóng đá
       const dataSeason = await Season.findById(req.params.id);
       if (!dataSeason) {
-        return res.status(400).render('error', { data: "mùa không được tìm thấy " });
+        return res.status(400).render('pages/error', { data: "mùa không được tìm thấy " });
       }
   
       // Lấy thông tin về các đội trong mùa
       const dataTeamSeasons = await TeamSeason.find({ season: req.params.id });
       if (!dataTeamSeasons || dataTeamSeasons.length === 0) {
-        return res.status(400).render('error', { data: "không có team nào trong mùa này" });
+        return res.status(400).render('pages/error', { data: "không có team nào trong mùa này" });
       }
   
       // Lấy thông tin về từng đội

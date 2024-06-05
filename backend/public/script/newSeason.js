@@ -197,3 +197,124 @@ function createTeam() {
       });
   }
 }
+function showModalPlayer() {
+    const modal = document.querySelector('.modalListPlayer');
+    modal.style.display = 'block';
+
+    fetch('/api/v1/player', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.status === 201) {
+            return response.json();
+        } else {
+            throw new Error('Failed to fetch player data');
+        }
+    })
+    .then(data => {
+        const playerList = document.querySelector('.playerListModal');
+        playerList.innerHTML = '';
+        data.data.forEach(player => { 
+            if(isPlayerInTeam(player._id)){
+            const listItem = document.createElement('li');
+            listItem.classList.add('player-item');
+            listItem.innerHTML = `
+            <span class="player-name">${player.name}</span>
+            <span class="player-shirt-number">${player.shirtNumber}</span>
+            <span class="player-goal">${player.goal}</span>
+            <button class="add-button" data-player-id="${player._id}" onclick="addPlayerToTeam(this)">Add</button>
+            `;
+            playerList.appendChild(listItem);
+            }
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching player data:', error);
+    });
+}
+function hideModalListPlayer() {
+    const modal = document.querySelector('.modalListPlayer');
+    modal.style.display = 'none';
+  }
+  function addPlayerToTeam(button) {
+    const playerId = button.getAttribute('data-player-id');
+    const playerItem = button.closest('.player-item');
+    const teamPlayerList = document.querySelector('.teamPlayerListModal');
+    teamPlayerList.appendChild(playerItem);
+    button.innerText = 'Remove';
+    button.classList.remove('add-button');
+    button.classList.add('delete-button');
+    button.setAttribute('onclick', 'removePlayerFromTeam(this)');
+}
+
+function removePlayerFromTeam(button) {
+    const playerItem = button.closest('.player-item');
+    const playerList = document.querySelector('.playerListModal');
+    playerList.appendChild(playerItem);
+    button.innerText = 'Add';
+    button.classList.remove('delete-button');
+    button.classList.add('add-button');
+    button.setAttribute('onclick', 'addPlayerToTeam(this)');
+}
+function isPlayerInTeam(playerId) {
+    const teamPlayerList = document.querySelectorAll('.teamPlayerListModal .player-item');
+    for (const playerItem of teamPlayerList) {
+        const playerIdAttr = playerItem.querySelector('button').getAttribute('data-player-id');
+        if (playerIdAttr === playerId) {
+            return false; // Cầu thủ đã tồn tại trong danh sách của đội bóng
+        }
+    }
+    return true; // Cầu thủ chưa tồn tại trong danh sách của đội bóng
+}
+function addTeam() {
+    const teamName = document.getElementById('teamName').value;
+    const nameArena = document.getElementById('nameArena').value;
+    const logo = document.getElementById('logo').value;
+    const imgArena = document.getElementById('imgArena').value;
+    const description = document.getElementById('description').value;
+    
+    const playerItems = document.querySelectorAll('.teamPlayerListModal .player-item');
+    const playerIds = Array.from(playerItems).map(item => item.querySelector('button').getAttribute('data-player-id'));
+
+    fetch('/api/v1/team', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: teamName,
+            nameArena: nameArena,
+            logo: logo,
+            imgArena: imgArena,
+            description: description,
+            players: playerIds
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            // Nếu tạo team thành công, gửi yêu cầu PATCH để cập nhật status của các player
+            return fetch('/api/v1/player/updateStatus', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ playerIds: playerIds })
+            });
+        }
+        throw new Error('Failed to add team');
+    })
+    .then(playerResponse => {
+        if (playerResponse.ok) {
+            console.log('Team and player status updated successfully');
+            // Thực hiện các hành động khác sau khi cập nhật thành công
+        } else {
+            throw new Error('Failed to update player status');
+        }
+    })
+    .catch(error => {
+        console.error('Error adding team:', error);
+    });
+}

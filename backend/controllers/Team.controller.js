@@ -66,27 +66,31 @@ export  const getAllTeam = async (req, res) => {
       })
     }
   }
-  export  const createTeam = async (req, res) => {
-      try {
-        const {name,nameArena,logo,imgArena,description} = req.body;
+  export const createTeam = async (req, res) => {
+    try {
+        const { name, nameArena, logo, imgArena, description, players } = req.body;
+
+        // Tạo đối tượng team mới từ dữ liệu nhận được từ yêu cầu
         const newTeam = new Team({
-            name,
-            nameArena,
-            logo,
-            imgArena,
-            description,
+            name: name,
+            nameArena: nameArena,
+            logo: logo,
+            imgArena: imgArena,
+            description: description,
+            players: players
         });
-        console.log(req.body);
-        console.log(newTeam);
+
+        // Lưu team mới vào cơ sở dữ liệu
         await newTeam.save();
-        return res.status(201).json({
-            message:'Team created successfully',
-            team: newTeam._id,
-        });
-      } catch (error) {
-        return res.status(500).json({message:'Failed create',error:error.message})
-      }
+
+        // Trả về thông tin về team vừa tạo thành công
+        res.status(201).json(newTeam);
+    } catch (error) {
+        // Xử lý lỗi nếu có bất kỳ lỗi nào xảy ra trong quá trình tạo team
+        console.error('Error creating team:', error);
+        res.status(500).json({ message: 'Internal server error' });
     }
+};
   export const updateTeam = async (req,res) => {
     try {
       const {id} = req.params;
@@ -132,3 +136,18 @@ export  const getAllTeam = async (req, res) => {
       })
     }
   }
+  export const getPlayersInTeam = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const team = await Team.findById(id).populate('players');
+        return res.status(200).render('pages/playerinteam', {
+            team,
+            players: team.players
+        });
+    } catch (error) {
+        return res.status(500).render('error', {
+            nameError: error.name,
+            message: error.message
+        });
+    }
+};

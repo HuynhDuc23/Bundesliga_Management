@@ -430,6 +430,14 @@ body{
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+.addListPlayer{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 .labelAddNewTeam {
     font-weight: bold;
     color: black;
@@ -454,9 +462,20 @@ h1{
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
-    z-index: 9999; /* Đảm bảo modal hiển thị trên tất cả các phần tử khác */
+    z-index: 9990; /* Đảm bảo modal hiển thị trên tất cả các phần tử khác */
   }
   .modalListTeam {
+    display: none;
+    position: fixed;
+    margin-top: 125px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Màu nền mờ */
+    z-index: 9900; /* Đảm bảo modal hiển thị trên tất cả các phần tử khác */
+  }
+  .modalListPlayer {
     display: none;
     position: fixed;
     margin-top: 125px;
@@ -502,4 +521,105 @@ h1{
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+/* Nút thêm player */
+.modalListPlayer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .addListPlayer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;
+    margin-bottom: 20px; /* Thêm khoảng cách giữa các phần và nút */
+  }
+  
+  .player-team-side,
+  .player-free-side {
+    flex: 1;
+    margin: 0 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+  }
+  
+  .divider {
+    width: 2px;
+    background-color: #ccc;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+  
+  .player-team-side ul,
+  .player-free-side ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .player-heading {
+    color: black;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .player-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .player-name,
+  .player-shirt-number,
+  .player-goal {
+    color: black;
+    margin-right: 20px;
+  }
+  
+  .add-button,
+  .delete-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .add-button:hover,
+  .delete-button:hover {
+    background-color: #45a049;
+  }
+
+  .modal-buttons button:hover {
+    background-color: #e9e9e9;
+  }
+  .modal-buttons {
+    display: flex;
+    justify-content: center; /* Canh giữa nút */
+    width: 100%;
+    margin-top: 20px; /* Thêm khoảng cách từ phần danh sách cầu thủ */
+  }
+  
+  .modal-buttons button {
+    padding: 10px 20px; /* Thêm padding để nút lớn hơn */
+  }
+  .teamPlayerListModal,
+.playerListModal {
+  max-height: 300px; /* Đặt chiều cao tối đa cho danh sách */
+  overflow-y: auto; /* Hiển thị thanh cuộn khi danh sách vượt quá chiều cao tối đa */
 }

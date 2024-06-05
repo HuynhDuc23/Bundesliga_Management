@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Players</title>
+    <%- include('../utils/link.ejs') %>
+</head>
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <%- include('../partials/header') %>
+            <div class="season-info">
+                <h2 class="name-season">
+                    <%= team.name %> 
+                </h2>
+            </div>
+            <!-- Hiển thị players trong team -->
+            <div class="players-list">
+                <h3>Players in Team</h3>
+                <% if (players.length > 0) { %>
+                    <div class="teams_content" id="listPlayers">
+                        <% players.forEach(player => { %>        
+                                <div class="teams_content__boxitem">
+                                    <img class="teams_content__boxitem--img" src="https://via.placeholder.com/150" alt="Player Image">
+                                    <p class="teams_content__boxitem--name" style="color: #fff;"><%= player.name %></p>
+                                </div>
+                        <% }) %>
+                    </div>
+                <% } else { %>
+                    <p>No players found for this team.</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

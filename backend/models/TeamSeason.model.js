@@ -13,3 +13,5 @@ const teamSeasonSchema = new mongoose.Schema({
 
 const TeamSeason = mongoose.model("TeamSeason", teamSeasonSchema);
 export default TeamSeason;
+
+
