@@ -35,28 +35,43 @@ export const getDetailPlayerMatch = async(req,res) => {
     if(!match) return res.status(404).json({
         message: "Can be not found match"
     })
-    const teamMatch = await TeamMatch.find()
+    const teamMatch = await TeamMatch.find({match:id})
     if(!teamMatch) return res.status(404).json({
         message: "No teams in Match"
     })
     // const team1 = teamMatch[0].team
     // const team2 = teamMath[1].team
+    console.log("id: "+id);
     const playerMatch = await PlayerMatch.find({match:id}).populate('player');
     if(!playerMatch) return res.status(404).json({
         message: "No players in Match"
     })
-    if(playerMatch[0].events){
+    console.log("Player match: "+playerMatch);
+    if(playerMatch== null) return res.status(404).json({
+        message : "Not player match"
+    })
+    console.log(teamMatch[0]._id);
+    if(playerMatch.length>0){
         playerMatch.forEach((players)=>{
             const player = players.player;
             const events = players.events;
             events.forEach((event) => {
                 if(event.type=='goal'){
-                    goals.push({
-                    team:player.team,
-                    player:player.name,
-                    minute:event.minutes,
-                    score:event.score ? event.score : ""
-                    })
+                    if(player.team==teamMatch[0]._id){
+                        goals.push({
+                        team:"team1",
+                        player:player.name,
+                        minute:event.minutes,
+                        score:event.score ? event.score : ""
+                        })
+                    }else{
+                        goals.push({
+                            team:"team2",
+                            player:player.name,
+                            minute:event.minutes,
+                            score:event.score ? event.score : ""
+                            })
+                    }
                 }
                 if(event.type=='foul'){
                     fouls.push({

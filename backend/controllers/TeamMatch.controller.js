@@ -41,29 +41,65 @@ export const addTeamMatch = async(req,res) => {
         })
     }
 }
+function formatDate(date){
+    return date.toDateString();
+}
+// function uniqueByDate(array) {
+//     const seen = new Set();
+//     return array.filter(obj => {
+//       const date = obj.date;
+//       if (!seen.has(date)) {
+//         seen.add(date);
+//         return true;
+//       }
+//       return false;
+//     });
+//   }
+//   function compareObjects(obj1, obj2) {
+//     return obj1.date.getTime() === obj2.date.getTime();
+// }
 export const getDetailsTeamMatch = async(req,res) => {
     try {
-        const nameSeason = req.query.name
+        const nameSeason = req.query.name || ""
         const infoMatchs = []
-        const season = await Season.find({name:nameSeason});
+        const seasons = [];
+        const listSeason =  await Season.find().sort({yearEnd:-1})
+        if(listSeason.length>0){
+            listSeason.forEach((season) => {
+                seasons.push({
+                    name:season.name,
+                    yearStart:season.yearStart,
+                    yearEnd:season.yearEnd
+                })
+            })
+        }
+        var season;
+        if(!nameSeason){
+            season = listSeason[0];
+            console.log("check")
+        }else{
+            season = await Season.findOne({name:nameSeason});
+            console.log(nameSeason)
+        }
+        console.log(season)
         if (!season) {
           return res.status(400).json({
             error:true,
             message: "Cannot found season",
           });
         }
-        const idSeason = season[0].id;
-        const match = await Match.find({season:idSeason})
+        const idSeason = season._id;
+        const match = await Match.find({season:idSeason}).sort({date:1})
         if(!match) return res.status(404).json({
             error:true,
             message:"Not match in Season"
-        })
+        }) 
         await Promise.all(match.map(async (match) => {
             const result = await TeamMatch.find({match:match.id}).populate('team')
             if(result.length>0){
-                console.log("abc")
                 infoMatchs.push({
-                    date:match.date,
+                    idMatch:match._id,
+                    date:formatDate(match.date),
                     description:match.description,
                     stadium:match.stadium,
                     team1:{
@@ -75,9 +111,47 @@ export const getDetailsTeamMatch = async(req,res) => {
                 })
             }
         }))
+        var listDatesMatch = [];
+        match.forEach((e)=>{
+            listDatesMatch.push({
+                date:e.date
+            })
+        })
+        listDatesMatch = listDatesMatch.filter((obj, index, self) =>
+            index === self.findIndex((t) => (
+                compareObjects(t, obj)
+            ))
+        );        
+        for(var j = 1 ; j <= listDatesMatch.length ; j++){
+            listDatesMatch[j-1].key = "match"+j;
+        }
+        var lengthMatch = listDatesMatch.length;
+        const groupedMatches = {};
+        infoMatchs.forEach((match)=>{
+            var key = "";
+            listDatesMatch.forEach((e)=>{
+                if(match.date===formatDate(e.date)){
+                   key = e.key; 
+                }
+            })
+            if(!groupedMatches[key]){
+                groupedMatches[key] = [];
+            }
+            groupedMatches[key].push(match);
+        })
+        // return res.render("pages/match",{
+        //     error:false,
+        //     length:lengthMatch,
+        //     selectedSeason:season.name,
+        //     list:seasons,
+        //     data:groupedMatches
+        // })
         return res.status(200).json({
             error:false,
-            data:infoMatchs
+            selectedSeason:season.name,
+            length:lengthMatch,
+            list:seasons,
+            data:groupedMatches
         })
       } catch (error) {
         return res.status(500).json({

@@ -28,6 +28,12 @@ const teamSchema = new mongoose.Schema(
     description:{
         type:String,
     },
+    players:[
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Player'
+        }
+    ]
 }
 )
 export default mongoose.model("Team", teamSchema);

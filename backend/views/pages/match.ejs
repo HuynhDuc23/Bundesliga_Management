@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('../utils/link.ejs')%>
+    <style>
+        p{
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <%- include ('../partials/header') %>
+            <div class="match__season">
+                <select class="match__seasonSelect" id="seasonSelect">
+                    <%
+                        list.forEach((season) => {
+                     %>
+                     <option value="<%= season.name %>" <%= season.name === selectedSeason ? 'selected' : '' %>>Season - <%= season.name %></option>
+                     <%       
+                        })
+                    %>
+                </select>
+            </div>
+            <div class="matchteam_body">
+                <table>
+                <%
+                function formatDate(dateString) {
+                    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                    var parts = dateString.split(' ');
+                    var day = parts[2];
+                    var monthIndex = months.indexOf(parts[1]);
+                    var month = monthIndex + 1;
+                    return day + '/' + month;
+                }
+                %>
+    <%
+    for(var i = 1; i <= length ; i++) {
+    %>
+<tr>
+    <th class="match__table--heading">Ngày thi đấu <%=i%>/38</th>
+</tr>
+    <%
+    var matchIndex = "match"+i;
+    var datas =  data[matchIndex] ? data[matchIndex] : [];
+    var checkColumn = 0;
+    datas.forEach((matchItem) => {
+        var formattedDate = formatDate(matchItem.date);
+        var datasTeam1 = matchItem && matchItem["team1"] && matchItem["team1"].data ? matchItem["team1"].data : {};
+        var datasTeam2 = matchItem && matchItem["team2"] && matchItem["team2"].data ? matchItem["team2"].data : {};
+    %>
+        <% if (checkColumn % 2=== 0) { %>
+            </tr><tr class="row">
+        <% } %>
+        <td class="">
+            <a class="row table__matchteam--body" href="/api/v1/playermatch/<%=matchItem.idMatch%>">
+            <div class="mg-r-30">
+                <div class="match__body--team mg-btm-10">
+                    <img class="match__body--team__img" src="<%=datasTeam1.team.logo%>" alt="">
+                    <p class="match__body--team__name"><%=datasTeam1.team.name%></p>
+                    <p class="match__body--team__goal"><%=datasTeam1.goal%></p>
+                </div>
+                <div class="match__body--team">
+                    <img class="match__body--team__img" src="<%=datasTeam2.team.logo%>" alt="">
+                    <p class="match__body--team__name"><%=datasTeam2.team.name%></p>
+                    <p class="match__body--team__goal"><%=datasTeam2.goal%></p>
+                </div>
+            </div>
+            <div class="match__body--status">
+                <p class="match__body--status-title">Status</p>
+                <p class="match__body--status-date"><%=formattedDate%></p>
+            </div>             
+            </a>
+        </td>
+    </a>
+        <% checkColumn++; %>
+    <%
+            });
+        };
+    %>
+        </table>
+        </div>
+        </div>
+    </div>
+    <script src="../../script/matchTeamBySeason.js"></script>
+</body>
+</html>

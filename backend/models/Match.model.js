@@ -14,14 +14,19 @@ const matchSchema = new mongoose.Schema(
             required:true,
             minlength:10,
         },
-        stadium:{
+        stadium:{   
             type:String,
             required:true
         },
         status:{
             type:Number,
             default:0
-        }
+        },
+        players:[
+             {
+                    type: Schema.Types.ObjectId,ref:'Player'
+             }
+        ]
     }
 )
 export default mongoose.model("Match",matchSchema);
