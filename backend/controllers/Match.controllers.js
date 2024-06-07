@@ -23,7 +23,28 @@ export const getAllMatches = async (req, res) => {
   }
 };
 
-// Get team in season by id season
+export const getMatchById = async (req, res) => {
+  try { 
+    const idmatch = req.params.id;
+    const match = await Match.findById(idmatch);
+    if (!match) {
+      return res.status(404).json({
+        message: "Can't get match!",
+      });
+    }
+    return res.status(200).json({
+      message: "Success!",
+      data: match,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+      name: error.name,
+    });
+  }
+};
+
+// Lấy team trong season theo id season
 export const getTeamInSeasonById = async (req, res) => {
   try {
     // Lấy id mùa bóng đá
@@ -68,7 +89,7 @@ export const getTeamInSeasonById = async (req, res) => {
 
 
 // tìm match theo id của season
-export const getMatchById = async (req, res) => {
+export const getMatchByIdSS = async (req, res) => {
     try {
       const ID_season = req.params.id;
       const match = await Match.find({ID_season: ID_season});

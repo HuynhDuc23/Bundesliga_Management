@@ -70,7 +70,6 @@
                     </div>
                 </form>
 
-                <!-- Match Container -->
                 <div id="matchContainer"></div>
         </div>
     </div>
@@ -105,8 +104,8 @@
                 async function displayMatches() {
                     try {
                         // Gọi API 1 để lấy danh sách trận đấu theo ID mùa giải
-                        const matchResponse = await fetch(`/api/v1/match/${seasonId}`, {
-                            method: 'POST', // Thay đổi phương thức thành POST
+                        const matchResponse = await fetch(`/api/v1/match/BySeason/${seasonId}`, {
+                            method: 'POST', 
                             headers: {
                                 'Content-Type': 'application/json'
                             },
@@ -114,7 +113,6 @@
                                 seasonId
                             })
                         });
-                        console.log(matchResponse);
 
                         if (!matchResponse.ok) throw new Error('Failed to fetch matches');
                         const {
@@ -123,10 +121,10 @@
 
                         // Duyệt qua từng trận đấu và hiển thị thông tin
                         for (const matchItem of match) {
-                            // Gọi API 2 để lấy thông tin đội bóng từ ID trận đấu
+                            // Gọi API 2 để lấy thông tin đội bóng từ ID trận đấu trong matchteam
                             var idmatch = matchItem._id;
                             const matchTeamsResponse = await fetch(`/api/v1/matchteam/${idmatch}`, {
-                                method: 'POST', // Thay đổi phương thức thành POST
+                                method: 'POST', 
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
@@ -142,7 +140,7 @@
                             var idteam1 = matchTeams[0].ID_team;
                             // Lấy thông tin chi tiết của đội bóng từ API 3
                             const teamAResponse = await fetch(`/api/v1/team/${idteam1}`, {
-                                method: 'POST', // Thay đổi phương thức thành POST
+                                method: 'POST', 
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
@@ -157,7 +155,7 @@
 
                             var idteam2 = matchTeams[1].ID_team;
                             const teamBResponse = await fetch(`/api/v1/team/${idteam2}`, {
-                                method: 'POST', // Thay đổi phương thức thành POST
+                                method: 'POST', 
                                 headers: {
                                     'Content-Type': 'application/json'
                                 },
@@ -201,8 +199,6 @@
                         document.querySelectorAll('.edit-match').forEach(button => {
                             button.addEventListener('click', function (event) {
                                 const matchId = event.target.closest('.match').dataset.matchId;
-                                // Xử lý sửa trận đấu với matchId
-                                // Ví dụ: mở form sửa, điền thông tin vào form, v.v.
                                 editMatch(matchId);
                             });
                         });
@@ -210,7 +206,6 @@
                         document.querySelectorAll('.delete-match').forEach(button => {
                             button.addEventListener('click', function (event) {
                                 const matchId = event.target.closest('.match').dataset.matchId;
-                                // xóa trận đấu với matchId
                                 deleteMatch(matchId);
                             });
                         });
@@ -221,9 +216,84 @@
                 }
 
                 // Hàm để sửa trận đấu
-                function editMatch(matchId) {
-                    // Hiển thị form sửa và điền thông tin trận đấu vào form
-                    // Gọi API để cập nhật thông tin trận đấu
+                async function editMatch(matchId) {
+                    try {
+                        // Gọi API để lấy thông tin chi tiết của trận đấu
+                        const response = await fetch(`/api/v1/match/${matchId}`, {
+                            method: 'POST', 
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                        });
+                        if (!response.ok) throw new Error('Failed to fetch match details');
+                        const match = await response.json();
+                        
+                            const matchTeamsResponse = await fetch(`/api/v1/matchteam/${matchId}`, {
+                                method: 'POST', 
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                            });
+                            if (!matchTeamsResponse.ok) throw new Error('Failed to fetch match teams');
+                            const {
+                                matchTeams
+                            } = await matchTeamsResponse.json();
+
+                            var idteam1 = matchTeams[0].ID_team;
+                            // Lấy thông tin chi tiết của đội bóng từ API 3
+                            const teamAResponse = await fetch(`/api/v1/team/${idteam1}`, {
+                                method: 'POST', 
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    idteam1
+                                })
+                            });
+                            if (!teamAResponse.ok) throw new Error('Failed to fetch team A');
+                            const {
+                                team: teamA
+                            } = await teamAResponse.json();
+
+                            var idteam2 = matchTeams[1].ID_team;
+                            const teamBResponse = await fetch(`/api/v1/team/${idteam2}`, {
+                                method: 'POST', 
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    idteam2
+                                })
+                            });
+                            if (!teamBResponse.ok) throw new Error('Failed to fetch team B');
+                            const {
+                                team: teamB
+                            } = await teamBResponse.json();
+                        // Điền thông tin vào form
+                        //document.getElementById('matchId').value = matchId;
+                        document.getElementById('teamId1').value = idteam1;
+                        document.getElementById('teamId2').value = idteam2;
+                        document.getElementById('date').value = match.date;
+                        document.getElementById('stadium').value = match.stadium;
+                        document.getElementById('description').value = match.description;
+                
+                        // Hiển thị form
+                        document.getElementById('addMatchForm').style.display = 'block';
+                        document.getElementById('overlay').style.display = 'block';
+                
+                        // Thay đổi nút submit thành "Update Match"
+                        const submitButton = document.getElementById('addMatchSubmitButton');
+                        submitButton.textContent = 'Update Match';
+                
+                        // Gắn sự kiện cập nhật trận đấu
+                        submitButton.removeEventListener('click', addMatch); // Xóa sự kiện thêm trận đấu
+                        submitButton.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            updateMatch(matchId);
+                        });
+                    } catch (error) {
+                        console.error('Error fetching match details:', error);
+                    }
                 }
 
                 // Hàm để xóa trận đấu
@@ -243,46 +313,7 @@
                 // Hiển thị các trận đấu khi trang được tải
                 displayMatches();
             });
-            function addMatch() {
-                const date = document.getElementById('date').value;
-                const ID_season = document.getElementById('ID_season').value;
-                const teamId1 = document.getElementById('teamId1').value;
-                const teamId2 = document.getElementById('teamId2').value;
-                const stadium = document.getElementById('stadium').value;
-                const description = document.getElementById('description').value;
-
-                const formData = {
-                    date: date,
-                    ID_season: ID_season,
-                    teamId1: teamId1,
-                    teamId2: teamId2,
-                    stadium: stadium,
-                    description: description
-                };
-
-                fetch('/api/v1/matchteam/add-match', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to create match');
-                        }
-                        return response.json();
-                    })
-                    .then(result => {
-                        //displayMatch(result.match, result.matchteam1, result.matchteam2);
-                        addMatchForm.style.display = 'none';
-                        overlay.style.display = 'none';
-                        addMatchForm.reset();
-                    })
-                    .catch(error => {
-                        console.error(error);
-                    });
-            }
+            
         </script>
 </body>
 
