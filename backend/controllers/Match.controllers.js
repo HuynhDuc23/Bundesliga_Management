@@ -1,6 +1,7 @@
 import Match from "../models/Match.model.js";
 import TeamSeason from "../models/TeamSeason.model.js";
 import Team from "../models/Team.model.js";
+import MatchTeam from "../models/Match_Team.model.js";
 
 export const getAllMatches = async (req, res) => {
   try { 
@@ -22,7 +23,7 @@ export const getAllMatches = async (req, res) => {
   }
 };
 
-// get team in season by id
+// Get team in season by id season
 export const getTeamInSeasonById = async (req, res) => {
   try {
     // Lấy id mùa bóng đá
@@ -57,12 +58,7 @@ export const getTeamInSeasonById = async (req, res) => {
         teams: dataTeams,
       },
     });
-    // return res.status(200).json({
-    //   data: {
-    //     // season: dataSeason,
-    //     teams: dataTeams,
-    //   },
-    // });
+
   } catch (error) {
     return res.status(500).json({
       message: error.message,
@@ -74,40 +70,23 @@ export const getTeamInSeasonById = async (req, res) => {
 // tìm match theo id của season
 export const getMatchById = async (req, res) => {
     try {
-      const { ID_season } = req.params;
+      const ID_season = req.params.id;
       const match = await Match.find({ID_season: ID_season});
       if (!match) {
         return res.status(404).json({ match: "Match not found" });
       }
-      return res.render("pages/add",{
-        match
+      return res.status(201).json({
+        match: match
       });
     } catch (error) {
       return res.status(500).json({ message: "Failed to get match" });
     }
   };  
 
-// export const createMatch = async (req, res) => {
-//   try {
-//     const { date, ID_season, description } = req.body;
-//     const newMatch = new Match({
-//       date,
-//       ID_season,
-//       description,
-//     });
-//     await newMatch.save();
-//     return res.status(201).json({
-//       message: "Match created successfully",
-//       match: newMatch,
-//     });
-//   } catch (error) {
-//     return res.status(500).json({ message: "Failed to create match" });
-//   }
-// };
 
 export const updateMatch = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id;
     const { date, stadium, description } = req.body;
     const updatedMatch = await Match.findByIdAndUpdate(
       id,
@@ -128,13 +107,21 @@ export const updateMatch = async (req, res) => {
 
 export const deleteMatch = async (req, res) => {
   try {
-    const { id } = req.params;
-    const deletedMatch = await Match.findByIdAndDelete(id);
+    const id = req.params.id;
+    // Xóa tất cả các bản ghi MatchTeam liên quan đến Match
+    const deletedMatchTeams = await MatchTeam.deleteMany({ ID_match: id });
+    if (deletedMatchTeams.deletedCount === 0) {
+      return res.status(404).json({ message: "No match teams found to delete" });
+    }
+
+    // Xóa Match
+    const deletedMatch = await Match.findByIdAndDelete({ _id: id });
     if (!deletedMatch) {
       return res.status(404).json({ message: "Match not found" });
     }
-    return res.status(200).json({ message: "Match deleted successfully" });
+
+    return res.status(200).json({ message: "Match and related match teams deleted successfully" });
   } catch (error) {
-    return res.status(500).json({ message: "Failed to delete match" });
+    return res.status(500).json({ message: "Failed to delete match and related match teams" });
   }
 };

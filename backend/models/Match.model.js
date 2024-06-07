@@ -21,7 +21,14 @@ const matchSchema = new mongoose.Schema({
     description: {
         type: String,
     },
-})
+    players:[
+        {
+               type: Schema.Types.ObjectId,ref:'Player'
+        }
+    ]
+    
+    },
+)
 
 const Match = mongoose.model("Match", matchSchema);
 export default Match;

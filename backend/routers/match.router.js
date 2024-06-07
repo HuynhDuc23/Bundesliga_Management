@@ -2,7 +2,6 @@ import { Router } from "express";
 import {
   getAllMatches,
   getMatchById,
-  // createMatch,
   getTeamInSeasonById,
   updateMatch,
   deleteMatch,
@@ -13,8 +12,7 @@ const matchRouter = Router();
 
 matchRouter.get("/:id",getTeamInSeasonById);
 matchRouter.get("/",getAllMatches);
-// matchRouter.get("/:id", getMatchById);
-// matchRouter.post("/", createMatch);
+matchRouter.post("/:id", getMatchById);
 matchRouter.put("/:id", updateMatch);
 matchRouter.delete("/:id", deleteMatch);
 

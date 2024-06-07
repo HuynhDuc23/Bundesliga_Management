@@ -19,6 +19,22 @@ export const getAllMatchTeams = async (req, res) => {
     }
 }
 
+// Lấy thông tin matchteam từ id trận đấu
+export const getMatchTeamsByMatchId = async (req, res) => {
+    try {
+        const ID_match = req.params.id;
+        const matchTeams = await MatchTeam.find({ ID_match: ID_match });
+        if (!matchTeams) {
+            return res.status(404).json({ matchTeams: "Match teams not found" });
+        }
+        return res.status(201).json({
+            matchTeams: matchTeams
+        });
+    } catch (error) {
+        return res.status(500).json({ message: "Failed to get match teams" });
+    }
+  };
+
 // tìm theo id của team 
 export const getMatchTeamById = async (req, res) => {
     try {
@@ -37,11 +53,9 @@ export const getMatchTeamById = async (req, res) => {
 };
 
 export const createMatchTeam = async (req, res) => {
-    const session = await Match.startSession();
-    session.startTransaction();
     try {
-        const { date, ID_season, teamId1, teamId2, stadium , description } = req.body;
-        
+        const { date, ID_season, teamId1, teamId2, stadium, description } = req.body;
+
         // Tạo mới đối tượng match
         const newMatch = new Match({
             date: date,
@@ -49,11 +63,11 @@ export const createMatchTeam = async (req, res) => {
             stadium: stadium,
             description: description,
         });
-        
+
         // Lưu đối tượng match vào cơ sở dữ liệu và lấy _id của nó
-        const match = await newMatch.save({ session });
+        const match = await newMatch.save();
         const matchId = match._id;
-        
+
         // Tạo mới đối tượng matchteam thứ nhất với idmatch đã lấy
         const matchteam1 = new MatchTeam({
             ID_match: matchId,
@@ -61,9 +75,8 @@ export const createMatchTeam = async (req, res) => {
             status: 0,
             score: 0,
         });
-        
+
         // Tạo mới đối tượng matchteam thứ hai với idmatch đã lấy
-        // Có thể có các dữ liệu khác cho matchteam thứ hai ở đây
         const matchteam2 = new MatchTeam({
             ID_match: matchId,
             ID_team: teamId2,
@@ -72,13 +85,7 @@ export const createMatchTeam = async (req, res) => {
         });
 
         // Lưu cả hai đối tượng matchteam vào cơ sở dữ liệu
-        await Promise.all([matchteam1.save({ session }), matchteam2.save({ session })]);
-
-        // Commit giao dịch
-        await session.commitTransaction();
-
-        // Kết thúc session
-        session.endSession();
+        await Promise.all([matchteam1.save(), matchteam2.save()]);
 
         return res.status(201).json({
             message: "Match and MatchTeams created successfully",
@@ -87,12 +94,9 @@ export const createMatchTeam = async (req, res) => {
             matchteam2: matchteam2
         });
     } catch (error) {
-        // Rollback giao dịch nếu có lỗi
-        await session.abortTransaction();
-        
-        // Kết thúc session
-        session.endSession();
-        
-        return res.status(500).render("pages/error",{ message: "Failed to create match and matchteams" });
+        // Ghi lại chi tiết lỗi
+        console.error('Error creating match and matchteams:', error);
+
+        return res.status(500).render("pages/error", { data: "Failed to create match and matchteams" });
     }
-}
+};
