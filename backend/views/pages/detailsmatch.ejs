@@ -122,15 +122,22 @@
                             var fouls = team2.dataFould ? team2.dataFould : [];
                             fouls.forEach(foul => {
                             %>
-                            <p class="row description__content--info">
+                            <p style="justify-content: unset" class="row description__content--info">
                                 <span class="description__content--info__name"><%=foul.playerName%></span>
-                                <span>
+                                <span class="row">
                                     <%
                                     var minutes = foul.minutes ? foul.minutes : [];
-                                    minutes.forEach(m=>{%>
-                                    <%=m%>'
-                                    <%})%>
+                                    var cards = foul.card ? foul.card : [];
+                                    for(var i = 0 ; i < minutes.length ; i++){
+                                    %>
+                                        <span class="color__body--sub-fb"><%=minutes[i]%>'</span> 
+                                        <%if(cards[i] == 'yellow'){%>
+                                            <img class="description__content--info__foul" src="/img/yellow_card.png" alt="">
+                                        <%} else {%>
+                                            <img class="description__content--info__foul" src="/img/red_card.png" alt="">
+                                        <%}%>
                                 </span>
+                                <%}%>
                             </p>
                          <%                            
                             })

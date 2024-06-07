@@ -3,6 +3,7 @@ import Team from "../models/Team.model.js"
 import PlayerMatch from "../models/PlayerMatch.model.js"
 import Match from "../models/Match.model.js"
 import TeamMatch from "../models/TeamMatch.model.js"
+import mongoose from "mongoose"
 export const createPlayerMatch = async(req,res) => {
     try {
         const {match,player,events} = req.body
@@ -233,14 +234,46 @@ export const editPlayerMatch = async (req,res) => {
         if(!player) return res.status(404).json({
             message: "Player not found"
         })
-        console.log(id);
-        const eventOld = player.matchs.find(m => m.idMatch == id)?.events;
-        return res.status(200).json({
-            player:player,
-            aa:"zzz",
-            eventOld:eventOld
-        })
+        const teamsMatch = await TeamMatch.find({match:id}).populate('team');
+        console.log(teamsMatch)
+        let newEvent;
+        if(type=='goal'){
+            newEvent = {
+                type:type,
+                minutes:minute,
+                action:action,
+            }   
+        }else{
+            newEvent = {
+                type,
+                minutes:minute,
+                action,
+                card:card ? card : ""
+            }
+        }
+        for(const m of player.matchs){
+            if(m.idMatch==id){
+                m.events = [...m.events,newEvent];
+                const playerUpdate = await player.save();
+                if(playerUpdate!==null){
+                    if(type=='goal'){
+                        for(const team of teamsMatch){
+                            if(team.team.players.includes(idPlayer)){
+                                team.goal++;
+                                await team.save();
+                            }
+                        }
+                    }
+                    return res.redirect('/api/v1/teammatch')    
+                }
+                else res.status(404).json({
+                message:"Update Error"})
+            }
+        }
+        return res.status(404).json({ message: "Match not found" });
     } catch (error) {
-        
+        return res.status(500).json({
+            message:error.message
+        })
     }
 }
