@@ -55,9 +55,9 @@ function formatDate(date){
 //       return false;
 //     });
 //   }
-//   function compareObjects(obj1, obj2) {
-//     return obj1.date.getTime() === obj2.date.getTime();
-// }
+  function compareObjects(obj1, obj2) {
+    return obj1.date.getTime() === obj2.date.getTime();
+}
 export const getDetailsTeamMatch = async(req,res) => {
     try {
         const nameSeason = req.query.name || ""
@@ -139,20 +139,20 @@ export const getDetailsTeamMatch = async(req,res) => {
             }
             groupedMatches[key].push(match);
         })
-        // return res.render("pages/match",{
-        //     error:false,
-        //     length:lengthMatch,
-        //     selectedSeason:season.name,
-        //     list:seasons,
-        //     data:groupedMatches
-        // })
-        return res.status(200).json({
+        return res.render("pages/match",{
             error:false,
-            selectedSeason:season.name,
             length:lengthMatch,
+            selectedSeason:season.name,
             list:seasons,
             data:groupedMatches
         })
+        // return res.status(200).json({
+        //     error:false,
+        //     selectedSeason:season.name,
+        //     length:lengthMatch,
+        //     list:seasons,
+        //     data:groupedMatches
+        // })
       } catch (error) {
         return res.status(500).json({
           nameError: error.name,

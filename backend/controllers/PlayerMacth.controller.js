@@ -25,75 +25,222 @@ export const createPlayerMatch = async(req,res) => {
         })
     }
 }
-export const getDetailPlayerMatch = async(req,res) => {
-    try{
-    
-    const goals = [];
-    const fouls = [];
-    const {id} = req.params;
-    const match = await Match.findById(id);
-    if(!match) return res.status(404).json({
-        message: "Can be not found match"
-    })
-    const teamMatch = await TeamMatch.find({match:id})
-    if(!teamMatch) return res.status(404).json({
-        message: "No teams in Match"
-    })
-    // const team1 = teamMatch[0].team
-    // const team2 = teamMath[1].team
-    console.log("id: "+id);
-    const playerMatch = await PlayerMatch.find({match:id}).populate('player');
-    if(!playerMatch) return res.status(404).json({
-        message: "No players in Match"
-    })
-    console.log("Player match: "+playerMatch);
-    if(playerMatch== null) return res.status(404).json({
-        message : "Not player match"
-    })
-    console.log(teamMatch[0]._id);
-    if(playerMatch.length>0){
-        playerMatch.forEach((players)=>{
-            const player = players.player;
-            const events = players.events;
-            events.forEach((event) => {
-                if(event.type=='goal'){
-                    if(player.team==teamMatch[0]._id){
-                        goals.push({
-                        team:"team1",
-                        player:player.name,
-                        minute:event.minutes,
-                        score:event.score ? event.score : ""
-                        })
-                    }else{
-                        goals.push({
-                            team:"team2",
-                            player:player.name,
-                            minute:event.minutes,
-                            score:event.score ? event.score : ""
-                            })
-                    }
-                }
-                if(event.type=='foul'){
-                    fouls.push({
-                        team:player.team,
-                        player:player.name,
-                        minute:event.minutes,
-                        card:event.card ? event.card : ""
-                    });
-                }
-            })
-        });
+const compareGoals = (goals) => {
+    for(var i = 0 ; i < goals.length-1;i++){
+        for(var j = i + 1 ; j < goals.length; j++){
+            if(goals[i].playerName==goals[j].playerName){
+                goals[i].minutes = [...goals[i].minutes,...goals[j].minutes];
+                goals[j].playerName = "none";
+            }
+        }
     }
-    return res.status(200).json({
-        teamMatch,
-        goals,
-        fouls
-    })
-    } catch(e){
+}
+const compareFouls = (fouls) => {
+    for(var i = 0; i < fouls.length-1; i++){
+        for(var j = i+1; j < fouls.length; j++){
+            if(fouls[i].playerName==fouls[j].playerName){
+                fouls[i].card = [...fouls[i].card,...fouls[j].card];
+                fouls[i].minutes = [...fouls[i].minutes,...fouls[j].minutes];
+                fouls[j].playerName = "none";
+            }
+        }
+    }
+}
+export const getDetails = async (req,res) => {
+    try {
+        const {id} = req.params;
+        const match = await Match.findById(id).populate('players');
+        var goalTeam1 = [];
+        var goalTeam2 = [];
+        var foulTeam1 = [];
+        var foulTeam2 = [];
+        var dataTeam1 = {};
+        var dataTeam2 = {};
+        var totalGoalTeam1 = 0;
+        var totalGoalTeam2 = 0;
+        if(!match) return res.status(404).json({
+            message:"Match not found"
+        });
+        const teamsInMatch = await TeamMatch.find({match:id}).populate('team')
+        if(!teamsInMatch) return res.status(404).json({
+            message:"Not teams in Match"
+        })
+        const idTeam1 = teamsInMatch[0].team._id;
+        // match.players.forEach(e => {
+        //     console.log(e._id)
+        // })
+       teamsInMatch.forEach(t => { 
+            console.log("check :"+t.team._id)
+            if(t.team._id==idTeam1){
+                dataTeam1 = {
+                    name:t.team.name,
+                    logo:t.team.logo,
+                    description:t.team.description
+                }
+                match.players.forEach(pl => {
+                    if(t.team.players.indexOf(pl._id)>=0){
+                        console.log("yes: "+pl._id)
+                        pl.matchs.forEach(m => {
+                            if(m.idMatch==id){
+                                m.events.forEach(e => {
+                                    if(e.type=="goal"){
+                                        totalGoalTeam1++;
+                                        goalTeam1.push({
+                                            playerName:pl.name,
+                                            minutes:[e.minutes]
+                                            }
+                                        )
+                                    }else if(e.type=="foul"){
+                                        foulTeam1.push({
+                                            playerName:pl.name,
+                                            minutes:[e.minutes],
+                                            card:[e.card?e.card:""]
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    }
+            }
+            )
+            }else{
+                dataTeam2 = {
+                    name:t.team.name,
+                    logo:t.team.logo,
+                    description:t.team.description
+                }
+                match.players.forEach(pl => {
+                    if(t.team.players.indexOf(pl._id)>=0){
+                        console.log("yesb: "+pl._id)
+                        pl.matchs.forEach(m => {
+                            if(m.idMatch==id){
+                                m.events.forEach(e => {
+                                    if(e.type=="goal"){
+                                        totalGoalTeam2++;
+                                        goalTeam2.push({
+                                            playerName:pl.name,
+                                            minutes:[e.minutes]
+                                            }
+                                        )
+                                    }else if(e.type=="foul"){
+                                        foulTeam2.push({
+                                            playerName:pl.name,
+                                            minutes:[e.minutes],
+                                            card:[e.card?e.card:""]
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+        })
+        compareGoals(goalTeam1);
+        compareGoals(goalTeam2);
+        goalTeam1 = goalTeam1.filter(e => e.playerName != 'none');
+        goalTeam2 = goalTeam2.filter(e => e.playerName != 'none');
+        compareFouls(foulTeam1);
+        compareFouls(foulTeam2);
+        foulTeam1 = foulTeam1.filter(e => e.playerName != 'none');
+        foulTeam2 = foulTeam2.filter(e => e.playerName != 'none');
+        return res.status(201).render("pages/detailsmatch",{
+            match:match,
+            team1:{
+                info:dataTeam1,
+                totalGoal:totalGoalTeam1,
+                dataGoal:goalTeam1,
+                dataFould:foulTeam1
+            },
+            team2:{
+                info:dataTeam2,
+                totalGoal:totalGoalTeam2,
+                dataGoal:goalTeam2
+                ,dataFould:foulTeam2
+            }
+        })
+        //         return res.status(201).json({
+        //     match:match,
+        //     team1:{
+        //             info:dataTeam1,
+        //         totalGoal:totalGoalTeam1,
+        //         dataGoal:goalTeam1,
+        //         dataFould:foulTeam1
+        //     },
+        //     team2:{
+        //            info:dataTeam2,
+        //         totalGoal:totalGoalTeam2,
+        //         dataGoal:goalTeam2
+        //         ,dataFould:foulTeam2
+        //     }
+        // })
+    } catch (error) {
         return res.status(500).json({
-            nameError: e.name,
-            MessageError: e.message,
-            message:"Error fetching match details"
+            message:"Server Error",
+            reason:error.message,
         })
     }
 };
+export const getEditMatch = async (req,res) => {
+    try {
+        const matchs = await Match.find();
+        if(!matchs) return res.status(404).json({
+            message:"Matchs not found"
+        })
+        const detailsMatch = await Promise.all(matchs.map(async (match) => {
+            const info = await TeamMatch.find({ match: match._id }).populate('team');
+            return {
+                match,
+                details: info
+            };
+        }));
+        return res.render("pages/matchedits",{
+            matches:detailsMatch
+        })
+        // return res.status(200).json({
+        //     match:detailsMatch
+        // })
+    } catch (error) {
+        return res.status(500).json({
+            reason:error.message,
+            message:"Server Error",
+            abc:"abc"
+        })
+    }
+}   
+export const getEditEvent = async (req,res) => {
+    try {
+        const {id} = req.params;
+        const match = await Match.findById(id).populate('players');
+        const detailMatch = await TeamMatch.find({match:match._id}).populate('team');
+        return res.render("pages/editevent.ejs",{
+            matches:match,
+            info:detailMatch
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message:"Server Error",
+            season:error.message
+        })
+    }
+}
+export const editPlayerMatch = async (req,res) => {
+    try {
+        const {id} = req.params;
+        const {idPlayer,type,minute,action,card} = req.body;
+        console.log(idPlayer,type,minute,action);
+        const player = await Player.findById(idPlayer);
+        if(!player) return res.status(404).json({
+            message: "Player not found"
+        })
+        console.log(id);
+        const eventOld = player.matchs.find(m => m.idMatch == id)?.events;
+        return res.status(200).json({
+            player:player,
+            aa:"zzz",
+            eventOld:eventOld
+        })
+    } catch (error) {
+        
+    }
+}

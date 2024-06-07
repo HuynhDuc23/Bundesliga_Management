@@ -32,6 +32,11 @@ body{
     align-items: center;
     justify-content: space-between;
 }
+.flex-column{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 table {
     border-collapse: collapse;
     border: 2px solid grey; /* đặt độ dày và màu sắc cho viền */
@@ -330,3 +335,76 @@ td{
     text-decoration: none;
     padding: 14px 106px 14px 20px;
 }
+/* Details Match */
+.description__content{
+    padding: 0px 30px;margin-top: 36px;
+    position: relative;
+}
+.description__content--title{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.description__content--namefb{
+    color: #ccc;
+    margin: 10px 0px;
+}
+.description__content--sub{
+    color: #ccc;
+    font-size: 52px;
+    padding: 0px 30px;
+}
+.description__content--goal{
+    position: relative;
+    margin-top: 20px;
+}
+.devide{
+    height: 1px;background-color: rgb(160 134 134);width: 100%;
+}
+.description__content--iconfb{
+    color: #ccc;
+    position: absolute;
+    top: 2%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.description__content--info{
+    margin-bottom: 10px;
+}
+.description__content--info__name{
+    color: #9d9999;
+    margin-right: 10px;
+}
+.description__content--info > span:last-child{
+    color: #9d9999;
+}
+.description__content--icon_card{
+    top: 2px;
+    height: 24px;
+    width: 24px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.description__content--info__foul{
+    height: 20px;
+    width: 14px;
+    margin: 0px 4px;
+}
+.color__body--sub-fb{
+    color: #9d9999;
+}
+.app_button--primary{
+    margin-top: 30px;
+    text-decoration: none;
+    padding: 4px 10px;
+    background-color: crimson;
+    color: white;
+}
+.w-33{
+    width: 33%;
+}
+.hidden-element{
+    display: none;
+}
+

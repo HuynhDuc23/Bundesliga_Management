@@ -24,8 +24,8 @@ const matchSchema = new mongoose.Schema(
         },
         players:[
              {
-                    type: Schema.Types.ObjectId,ref:'Player'
-             }
+            type: Schema.Types.ObjectId,ref:'Player'
+             },
         ]
     }
 )

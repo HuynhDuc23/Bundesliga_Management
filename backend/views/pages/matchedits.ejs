@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('../utils/link.ejs')%>
+    <style>
+        p{
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <%- include ('../partials/header') %>   
+            <p style="font-size: 22px;margin: 30px 0px;text-align: center;" >Edit event match</p>
+            <% if (matches && Array.isArray(matches)) { %>
+                <% matches.forEach(e => { 
+                    if (e.details && Array.isArray(e.details)) {
+                 %>
+                 <a style="text-decoration: none;" href="/api/v1/playermatch/editevent/<%=e.match._id%>">
+                 <div class="w-33" style="background-color: rgb(53, 44, 44);padding: 6px 8px;">
+                <div class="row" >
+                 <%  e.details.forEach(team => { %>
+                            <p><%= team.team.name %></p>
+                        <% });
+                    } %>
+                </div>
+                <p>Date: <%=e.match.date%></p>
+                <p>Description: <%=e.match.description%></p>
+             </div>
+            </a>
+                <% });
+                %>
+        </a>
+            <% } else { %>
+                <p>No matches available</p>
+            <% } %>
+        </div>
+        </div>
+    </div>
+    <script src="../../script/searchTeamsByName.js"></script>
+</body>
+</html>

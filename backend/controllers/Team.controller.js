@@ -42,7 +42,7 @@ export  const getAllTeam = async (req, res) => {
   export const getOneTeam = async (req,res) => {
     try {
       const {id} = req.params;
-      const team = await Team.findById(id)
+      const team = await Team.findById(id).populate('players')
       if(!team){
         return res.status(404).json({
           message: " Cannot find Team by Id "+id

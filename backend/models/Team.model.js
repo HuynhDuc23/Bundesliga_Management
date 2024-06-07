@@ -31,7 +31,8 @@ const teamSchema = new mongoose.Schema(
     players:[
         {
             type: Schema.Types.ObjectId,
-            ref: 'Player'
+            ref: 'Player',
+            default:[]
         }
     ]
 }

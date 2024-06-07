@@ -13,6 +13,7 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use(cors()); // chan cors khoi loi
 app.use(cookieParser()); // tao cookie va gan cookie
 app.use(express.json()); // Sử dụng middleware express.json() để phân tích dữ liệu JSON từ các yêu cầu HTTP
+app.use(express.urlencoded({ extended: true }));
 // env
 // dotenv.config();
 // const URL = process.env.URL;
