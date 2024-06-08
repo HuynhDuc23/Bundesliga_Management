@@ -31,25 +31,27 @@
           <% if (data.length > 0) { %>
             <a href="/api/v1/season/newSeason/<%= data[0]._id %>" class="season-detail-btn">New Season</a>
           <% } else { %>
-            <a href="/api/v1/season/newSeason/default" class="season-detail-btn">New Season</a>
+            <a href="/api/v1/season/newSeason/6664168961e536f91c285577" class="season-detail-btn">New Season</a>
           <% } %>
         </li>
         <ul class="season-list">
           <% data.forEach(function(season) { %>
-          <li data-season-id="<%= season._id %>" class="season-item">
-            <span class="season-name">
-              <%= season.name %>
-            </span>
-            <span class="season-year" id="begin">
-              <%= season.yearStart %>
-            </span>
-            <span class="season-year" id="end">
-              <%= season.yearEnd %>
-            </span>
-            <button onclick='makeEditable(this.parentElement)' id="buttonEdit" class="season-detail-btn">Sửa</button>
-            <button onclick='saveChanges(this.parentElement)' id="buttonSave" class="season-detail-btn" style="display: none; margin-right: 115px;">Lưu</button>
-            <a href="/api/v1/season/<%= season._id %>" id="buttonchitiet" class="season-detail-btn">Chi tiết</a>
-          </li>
+            <% if (season._id != "6664168961e536f91c285577") { %>
+              <li data-season-id="<%= season._id %>" class="season-item">
+                <span class="season-name">
+                  <%= season.name %>
+                </span>
+                <span class="season-year" id="begin">
+                  <%= season.yearStart %>
+                </span>
+                <span class="season-year" id="end">
+                  <%= season.yearEnd %>
+                </span>
+                <button onclick='makeEditable(this.parentElement)' id="buttonEdit" class="season-detail-btn">Sửa</button>
+                <button onclick='saveChanges(this.parentElement)' id="buttonSave" class="season-detail-btn" style="display: none; margin-right: 115px;">Lưu</button>
+                <a href="/api/v1/season/<%= season._id %>" id="buttonchitiet" class="season-detail-btn">Chi tiết</a>
+              </li>
+            <% } %>
           <% }); %>
         </ul>
       </div>

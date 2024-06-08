@@ -115,7 +115,7 @@ export const createSeason = async (req, res) => {
       // Lấy thông tin về các đội trong mùa
       const dataTeamSeasons = await TeamSeason.find({ season: req.params.id });
       if (!dataTeamSeasons || dataTeamSeasons.length === 0) {
-        return res.status(200).render('pages/teaminseason', {
+        return res.status(200).render('pages/newseason', {
           data: {
             season: dataTeamSeasons,
             teams: []

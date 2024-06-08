@@ -1,4 +1,13 @@
 function createSeason() {
+    const teamList = document.querySelector('.team-list-ul');
+    const teams = teamList.querySelectorAll('li');
+
+    // Kiểm tra số lượng đội
+    if (teams.length < 10 || teams.length > 10) {
+        alert('Vui lòng thêm đủ 10 đội trước khi tạo mùa giải.');
+        return;
+    }
+
   const name = document.querySelector('#seasonName').value;
   const yearStart = document.querySelector('#yearBegin').value;
   const yearEnd = document.querySelector('#yearEnd').value;
@@ -270,6 +279,14 @@ function isPlayerInTeam(playerId) {
     return true; // Cầu thủ chưa tồn tại trong danh sách của đội bóng
 }
 function addTeam() {
+    const playerList = document.querySelector('.teamPlayerListModal');
+    const playerListLi = playerList.querySelectorAll('li');
+
+    // Kiểm tra số lượng đội
+    if (playerListLi.length < 11 || playerListLi.length > 11) {
+        alert('Vui lòng thêm đủ 11 cầu thủ trước khi tạo team mới.');
+        return;
+    }
     const teamName = document.getElementById('teamName').value;
     const nameArena = document.getElementById('nameArena').value;
     const logo = document.getElementById('logo').value;

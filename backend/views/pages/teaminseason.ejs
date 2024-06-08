@@ -12,7 +12,7 @@
             <%- include ('../partials/header') %>
             <div class="season-info">
                 <h2 class="name-season">
-                    <%= data.season.name %> (Năm: <%= data.season.yearStart %> - <%= data.season.yearEnd %>)
+                    <%= data.season.name %> (<%= data.season.yearStart %> - <%= data.season.yearEnd %>)
                     <button class="delete-season-button" onclick="deleteSeason('<%= data.season._id %>')">Delete</button>
                 </h2>
             </div>

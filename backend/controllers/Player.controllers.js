@@ -4,7 +4,6 @@ export const getAllPlayersWithStatusZero = async (req, res) => {
     try {
         // Lấy tất cả các cầu thủ có status = 0 từ cơ sở dữ liệu
         const players = await Player.find({ status: 0 });
-        console.log(players);
         // Trả về JSON chứa danh sách các cầu thủ
         return res.status(201).json({
             data: players,

@@ -613,7 +613,7 @@ h1{
     padding: 10px 20px; /* Thêm padding để nút lớn hơn */
   }
   .teamPlayerListModal,
-.playerListModal {
+.playerListModal,.teamListModal {
   max-height: 300px; /* Đặt chiều cao tối đa cho danh sách */
   overflow-y: auto; /* Hiển thị thanh cuộn khi danh sách vượt quá chiều cao tối đa */
 }
