@@ -570,13 +570,7 @@ h1{
     margin-bottom: 10px;
   }
   
-  .player-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-  }
+
   
   .player-name,
   .player-shirt-number,
@@ -622,4 +616,23 @@ h1{
 .playerListModal {
   max-height: 300px; /* Đặt chiều cao tối đa cho danh sách */
   overflow-y: auto; /* Hiển thị thanh cuộn khi danh sách vượt quá chiều cao tối đa */
+}
+.player-filters,
+.player-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.player-filters span,
+.player-item span {
+  flex: 1;
+  text-align: center;
+}
+
+.player-item button {
+  flex: 0 0 auto;
+  margin-left: 10px;
 }
