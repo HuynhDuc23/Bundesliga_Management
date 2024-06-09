@@ -13,8 +13,6 @@ router.use("/auth", authRouter);
 router.use("/user", usersRouter);
 router.use("/role", roleRouter);
 router.use("/upload", routerImages);
-
-
 // user routes
 router.use("/season", seasonRouter);
 router.use("/teamSeasons", teamSeasonRouter);
