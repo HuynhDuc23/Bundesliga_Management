@@ -12,10 +12,6 @@ const matchTeamSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    score: {
-        type: Number,
-        default: 0
-    },
 });
 const MatchTeam = mongoose.model("MatchTeam", matchTeamSchema);
 export default MatchTeam;

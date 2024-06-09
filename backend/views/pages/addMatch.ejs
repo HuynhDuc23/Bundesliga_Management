@@ -5,6 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Match</title>
+    <style>
+        .match-details span {
+            margin-top: 5px;
+        }
+        
+    </style>
     <%- include('../utils/link.ejs')%>
 
 </head>
@@ -163,8 +169,8 @@
                             const matchHTML = `
                             <div class="match" data-match-id="${matchItem._id}">
                                 <div class="team-info">
-                                    <span>${teamA.name}</span>
                                     <img src="${teamA.logo}" alt="${teamA.name}">
+                                    <span>${teamA.name}</span>
                                 </div>
                                 <div class="match-details">
                                     <span>${matchTeams[0].goal} - ${matchTeams[1].goal}</span>
