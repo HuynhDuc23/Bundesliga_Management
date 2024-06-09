@@ -25,9 +25,11 @@ const teamSchema = new mongoose.Schema(
         required: true,
         unique: true,
     },
+    
     description:{
         type:String,
     },
+
     players:[{type:Schema.Types.ObjectId,ref:'Player'}]
 }
 )

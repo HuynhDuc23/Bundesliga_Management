@@ -2,8 +2,9 @@ import { Router } from "express";
 import {
   getAllMatches,
   getMatchByIdSS,
+  rank,
+  getRanking,
   getMatchById,
-  getTeamInSeasonById,
   updateMatch,
   deleteMatch,
 } from "../controllers/Match.controllers.js";
@@ -11,11 +12,13 @@ import {
 
 const matchRouter = Router();
 
-matchRouter.get("/:id",getTeamInSeasonById);
+// matchRouter.get("/:id",getTeamInSeasonById);
 matchRouter.get("/",getAllMatches);
-matchRouter.post("/BySeason/:id", getMatchByIdSS);
-matchRouter.post("/:id", getMatchById);
-matchRouter.put("/:id", updateMatch);
+matchRouter.get("/rank",rank);
+matchRouter.get("/rank/:id",getRanking);
+matchRouter.get("/view/idseason/:id", getMatchByIdSS);
+matchRouter.get("/view/idmatch/:id", getMatchById);
+matchRouter.post("/update", updateMatch);
 matchRouter.delete("/:id", deleteMatch);
 
 export default matchRouter;

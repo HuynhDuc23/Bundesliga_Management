@@ -1,4 +1,48 @@
-import Team from "../models/Team.model.js"
+import TeamSeason from "../models/TeamSeason.model.js";
+import Team from "../models/Team.model.js";
+
+// Lấy team trong season theo id season
+export const getTeamInSeasonById = async (req, res) => {
+  try {
+    // Lấy id mùa bóng đá
+    const idSeason = req.params.id;
+    if (!idSeason) {
+      return res.status(400).render('error', {
+        data: "mùa không được tìm thấy "
+      });
+    }
+
+    // Lấy thông tin về các đội trong mùa
+    const dataTeamSeasons = await TeamSeason.find({
+      ID_season: idSeason
+    });
+    if (!dataTeamSeasons || dataTeamSeasons.length === 0) {
+      return res.status(400).render('pages/error', {
+        data: "không có team nào trong mùa này"
+      });
+    }
+
+    // Lấy thông tin về từng đội
+    const teamIds = dataTeamSeasons.map((teamSeason) => teamSeason.ID_team);
+    const dataTeams = await Team.find({
+      _id: {
+        $in: teamIds
+      }
+    });
+    
+    return res.status(200).render("pages/addMatch",{
+      data: {
+        ID_season: idSeason,
+        teams: dataTeams,
+      },
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 export const getAllTeam = async (req, res) => {
     try {

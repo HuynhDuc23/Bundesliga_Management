@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
   getAllMatchTeams,
-  getMatchTeamById,
+  getMatchTeamByIdTeam,
   createMatchTeam,
   getMatchTeamsByMatchId
 //   updateMatch,
@@ -12,9 +12,9 @@ import {
 const matchTeamRouter = Router();
 
 matchTeamRouter.get("/",getAllMatchTeams);
-matchTeamRouter.get("/:id", getMatchTeamById);
+matchTeamRouter.get("/view/idmatch/:id", getMatchTeamsByMatchId);
+matchTeamRouter.get("/:id", getMatchTeamByIdTeam);
 matchTeamRouter.post("/add-match", createMatchTeam);
-matchTeamRouter.post("/:id", getMatchTeamsByMatchId);
 // matchTeamRouter.put("/:id", updateMatch);
 // matchTeamRouter.delete("/:id", deleteMatch);
 

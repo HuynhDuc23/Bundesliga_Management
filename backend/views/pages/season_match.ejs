@@ -65,8 +65,8 @@
             const seasons = document.querySelectorAll('.season-id');
             seasons.forEach(season => {
                 season.addEventListener('click', function () {
-                    const seasonId = season.getAttribute('id'); // Lấy id của mùa bóng
-                    window.location.href = `/api/v1/match/${seasonId}`; // Chuyển đến trang match với id của mùa bóng
+                    const seasonId = season.getAttribute('id'); 
+                    window.location.href = `/api/v1/team/${seasonId}`; 
                 });
             });
         });

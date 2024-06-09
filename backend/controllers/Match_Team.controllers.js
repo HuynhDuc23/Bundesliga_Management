@@ -33,10 +33,10 @@ export const getMatchTeamsByMatchId = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ message: "Failed to get match teams" });
     }
-  };
+};
 
 // tìm theo id của team 
-export const getMatchTeamById = async (req, res) => {
+export const getMatchTeamByIdTeam = async (req, res) => {
     try {
         const { id } = req.params;
         const matchteam = await MatchTeam.findOne({ ID_team: id });

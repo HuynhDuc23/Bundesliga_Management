@@ -1,6 +1,7 @@
 import { Router } from "express";
-import {getTeamById} from "../controllers/Team.controller.js"
+import {getTeamById,getTeamInSeasonById} from "../controllers/Team.controller.js"
 const teamRouter = Router();
-teamRouter.post('/:id',getTeamById);
+teamRouter.get('/:id',getTeamInSeasonById);
+teamRouter.get('/view/idteam/:id',getTeamById);
 
 export default teamRouter;
