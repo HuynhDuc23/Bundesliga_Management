@@ -4,10 +4,12 @@ import {
   getRoles,
   deleteRole,
 } from "../controllers/Role.controllers.js";
+
+import { verifyToken, verifyTokenWithAdmin, verifyTokenAdminAuth } from "../middlewares/Permission.middlewares.js";
 const roleRouter = Router();
 
-roleRouter.post("/", createRole);
-roleRouter.get("/", getRoles);
-roleRouter.delete("/:id", deleteRole);
+roleRouter.post("/", verifyToken, verifyTokenWithAdmin, createRole);
+roleRouter.get("/", verifyToken, verifyTokenWithAdmin, getRoles);
+roleRouter.delete("/:id", verifyToken, verifyTokenWithAdmin, deleteRole);
 
 export default roleRouter;

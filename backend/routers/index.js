@@ -13,9 +13,11 @@ router.use("/auth", authRouter);
 router.use("/user", usersRouter);
 router.use("/role", roleRouter);
 router.use("/upload", routerImages);
+
+
 // user routes
 router.use("/season", seasonRouter);
-router.use("/teamSeasons",teamSeasonRouter);
+router.use("/teamSeasons", teamSeasonRouter);
 // team routes
-router.use("/team",teamRoute);
+router.use("/team", teamRoute);
 export default router;

@@ -22,9 +22,26 @@ const userSchema = new mongoose.Schema(
       unique: true,
     },
     admin: {
+      type: String,
+      default: 'USER',
+    },
+    isBlocked: {
       type: Boolean,
       default: false,
     },
+    refreshToken: {
+      type: String,
+    },
+    passwordChangeAt: {
+      type: String
+    },
+    passwordResetToken: {
+      type: String
+    },
+    passwordResetExpires: {
+      type: String
+    }
+    ,
     role: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
@@ -36,3 +53,5 @@ const userSchema = new mongoose.Schema(
 );
 userSchema.plugin(mongoosePaginate);
 export default mongoose.model("User", userSchema);
+
+// !mgdb

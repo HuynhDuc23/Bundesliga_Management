@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config();
 // save refresh token in list
 let listToken = [];
-// REGISTER
+// REGISTER USER
 export const registerUser = async (req, res) => {
   try {
     const { error } = registerValid.validate(req.body, {
@@ -15,7 +15,7 @@ export const registerUser = async (req, res) => {
     if (error) {
       const errors = error.details.map((error) => error.message);
       return res.status(400).json({
-        name: "bad_request",
+        name: "Bad request",
         data: errors,
       });
     }

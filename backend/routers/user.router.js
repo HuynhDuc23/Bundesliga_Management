@@ -4,11 +4,13 @@ import {
   deleteUserById,
   getUsersById,
   createUser,
+  updateUser,
 } from "../controllers/User.controllers.js";
-import { verifyToken } from "../middlewares/Permission.middlewares.js";
+import { verifyToken, verifyTokenAdminAuth, verifyTokenWithAdmin } from "../middlewares/Permission.middlewares.js";
 const usersRouter = Router();
-usersRouter.get("/", getAllUsers); // verifyToken
-usersRouter.get("/:id", getUsersById);
-usersRouter.delete("/:id", deleteUserById);
-usersRouter.post("/", createUser);
+usersRouter.get("/", verifyToken, getAllUsers); // verifyToken
+usersRouter.get("/:id", verifyToken, getUsersById);
+usersRouter.delete("/:id", verifyToken, verifyTokenAdminAuth, deleteUserById);
+usersRouter.post("/", verifyToken, verifyTokenWithAdmin, createUser);
+usersRouter.patch("/:id", updateUser);
 export default usersRouter;
