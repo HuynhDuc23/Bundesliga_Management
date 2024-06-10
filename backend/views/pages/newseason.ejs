@@ -52,10 +52,43 @@
           <textarea id="description" name="description"class="CreateTeam" rows="4"></textarea>
           <br>
           <button type="button" onclick="hideModal()">Back</button>
-          <button class="buttonAddTeam" onclick="createTeam()">Thêm</button>
+          <button type="button" onclick="showModalPlayer()">Next</button>
         </form>
+      </div>
+      <div class="modalListPlayer" style="display: none;">
+        <div class="addListPlayer">
+          <div class="player-team-side">
+            <h3 class="player-heading">Player in Team</h3>
+            <div class="player-filters">
+              <span class="player-name">Name</span>
+              <span class="player-shirt-number">Shirt Number</span>
+              <span class="player-goal">Goal</span>
+              <span ></span>
+            </div>
+            <ul class="teamPlayerListModal">
+              <!-- Danh sách cầu thủ trong team sẽ được hiển thị ở đây -->
+            </ul>
+          </div>
+          <div class="divider"></div>
+          <div class="player-free-side">
+            <h3 class="player-heading">Free Players</h3>
+            <div class="player-filters">
+              <span class="player-name">Name</span>
+              <span class="player-shirt-number">Shirt Number</span>
+              <span class="player-goal">Goal</span>
+              <span ></span>
+            </div>
+            <ul class="playerListModal">
+              <!-- Danh sách cầu thủ tự do sẽ được hiển thị ở đây -->
+            </ul>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button type="button" onclick="hideModalListPlayer()">Back</button>
+          <button type="button" onclick="addTeam()">Thêm</button>
         </div>
       </div>
+      
       <div id="teamFormContainer"></div>
       <!-- Hiển thị danh sách đội bóng -->
       <div class="team-list">

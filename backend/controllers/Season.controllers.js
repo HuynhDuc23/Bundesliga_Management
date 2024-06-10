@@ -64,28 +64,38 @@ export const createSeason = async (req, res) => {
       // Lấy thông tin về mùa bóng đá
       const dataSeason = await Season.findById(req.params.id);
       if (!dataSeason) {
-        return res.status(400).render('pages/error', { data: "mùa không được tìm thấy " });
+        return res.status(200).render('pages/teaminseason', {
+          data: {
+            season: null,
+            teams: []
+          }
+        });
       }
   
       // Lấy thông tin về các đội trong mùa
       const dataTeamSeasons = await TeamSeason.find({ season: req.params.id });
       if (!dataTeamSeasons || dataTeamSeasons.length === 0) {
-        return res.status(400).render('pages/error', { data: "không có team nào trong mùa này" });
+        return res.status(200).render('pages/teaminseason', {
+          data: {
+            season: dataSeason,
+            teams: []
+          }
+        });
       }
   
       // Lấy thông tin về từng đội
       const teamIds = dataTeamSeasons.map((teamSeason) => teamSeason.team);
       const dataTeams = await Team.find({ _id: { $in: teamIds } });
-
-      return res.status(200).render('pages/teaminseason',{
+  
+      return res.status(200).render('pages/teaminseason', {
         data: {
           season: dataSeason,
-          teams: dataTeams,
-        },
+          teams: dataTeams
+        }
       });
     } catch (error) {
       return res.status(500).json({
-        message: error.message,
+        message: error.message
       });
     }
   };
@@ -95,13 +105,22 @@ export const createSeason = async (req, res) => {
       // Lấy thông tin về mùa bóng đá
       const dataSeason = await Season.findById(req.params.id);
       if (!dataSeason) {
-        return res.status(400).render('pages/error', { data: "mùa không được tìm thấy " });
+        return res.status(200).render('pages/teaminseason', {
+          data: {
+            teams: []
+          }
+        });
       }
   
       // Lấy thông tin về các đội trong mùa
       const dataTeamSeasons = await TeamSeason.find({ season: req.params.id });
       if (!dataTeamSeasons || dataTeamSeasons.length === 0) {
-        return res.status(400).render('pages/error', { data: "không có team nào trong mùa này" });
+        return res.status(200).render('pages/newseason', {
+          data: {
+            season: dataTeamSeasons,
+            teams: []
+          }
+        });
       }
   
       // Lấy thông tin về từng đội

@@ -12,19 +12,19 @@
             <%- include ('../partials/header') %>
             <div class="season-info">
                 <h2 class="name-season">
-                    <%= data.season.name %> (Năm: <%= data.season.yearStart %> - <%= data.season.yearEnd %>)
+                    <%= data.season.name %> (<%= data.season.yearStart %> - <%= data.season.yearEnd %>)
                     <button class="delete-season-button" onclick="deleteSeason('<%= data.season._id %>')">Delete</button>
                 </h2>
             </div>
           <!-- Hiển thị danh sách đội bóng -->
           <div class="team-list">
-            <h3>Danh sách đội bóng:</h3>
+        
             <ul>
                 <% data.teams.forEach(function(team) { %>
                     <li>
                         <img src="<%= team.logo %>" alt="<%= team.name %> Logo">
                         <span><%= team.name %></span>
-                        <a href="link_to_team_details" class="view-button">Xem</a>
+                        <a href="/api/v1/team/<%= team._id %>/players" class="view-button">Xem</a>
                     </li>
                 <% }); %>
             </ul>
