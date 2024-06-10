@@ -15,24 +15,24 @@ app.use(cookieParser()); // tao cookie va gan cookie
 app.use(express.json()); // Sử dụng middleware express.json() để phân tích dữ liệu JSON từ các yêu cầu HTTP
 app.use(express.urlencoded({ extended: true }));
 // env
-// dotenv.config();
-// const URL = process.env.URL;
-// const PORT = process.env.PORT;
+dotenv.config();
+const URL = process.env.URL;
+const PORT = process.env.PORT;
 
 // connect db
-connection("mongodb://localhost:27017/node_football",{
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+connection(URL);
 // routes : dinh tuyen router
 app.use("/api/v1", router);
 app.get("/",(req,rep) => {
   const data = __dirname;
   rep.render("index",{data})
 })
-app.listen(5050, () => {
+app.listen(PORT, () => {
   console.log("Server is running");
 });
-
+app.get("/",(req,rep) => {
+  const data = __dirname;
+  rep.render("index",{data})
+})
 // AUTHENTICATION : Dang Nhap so sanh user name va password is
 // AUTHORI: Ban la ai co quyen lam gi , phan quyen

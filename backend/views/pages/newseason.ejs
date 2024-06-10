@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <%- include('../utils/link.ejs')%>
+</head>
+
+<body>
+  <div class="center">
+    <div class="w-1080">
+      <%- include ('../partials/header') %>
+      <div class="season-info">
+        <h2 class="name-season">Create New Season</h2>
+        <div class="form-container"> <!-- Container bọc các nhóm label và input -->
+          <div class="form-group"> <!-- Nhóm label và input -->
+            <label for="seasonName" class="label-season">Name of Season:</label>
+            <input type="text" id="seasonName" name="seasonName" class="input-season" required>
+          </div>
+          <div class="form-group"> <!-- Nhóm label và input -->
+            <label for="yearBegin" class="label-year-begin">Year Begin:</label>
+            <input type="text" id="yearBegin" name="yearBegin" class="input-year-begin" required>
+          </div>
+          <div class="form-group"> <!-- Nhóm label và input -->
+            <label for="yearEnd" class="label-year-end">Year End:</label>
+            <input type="text" id="yearEnd" name="yearEnd" class="input-year-end" required>
+          </div>
+          <button type="button" class="CreateSeason" onclick="createSeason()">Create Season</button>
+          <button type="button" class="addTeam" onclick="showModalListTeam()">Thêm Team</button>
+        </div>
+        
+        <div class="modalListTeam">
+          <form  class = "addListTeam" >
+            <ul class="teamListModal">
+              
+            </ul>
+            <button type="button" class="back" onclick="hideModalListTeam()">Back</button>
+            <button type="button" class="addnewTeam" onclick="showModal()">New Team</button>
+          </form>
+        </div>
+
+        <div class="modalAddNewTeam">
+        <form  class = "addnewteam" >
+          <label for="teamName" class="labelAddNewTeam">Tên đội bóng:</label>
+          <input type="text" id="teamName" name="teamName" class="CreateTeam"required>
+          <br>
+          <label for="nameArena"class="labelAddNewTeam">Tên sân:</label>
+          <input type="text" id="nameArena" name="nameArena"class="CreateTeam" required>
+          <br>
+          <label for="logo"class="labelAddNewTeam">Logo đội bóng (URL):</label>
+          <input type="url" id="logo" name="logo"class="CreateTeam" required>
+          <br>
+          <label for="imgArena"class="labelAddNewTeam">Hình ảnh sân (URL):</label>
+          <input type="url" id="imgArena" name="imgArena" class="CreateTeam"required>
+          <br>
+          <label for="description"class="labelAddNewTeam">Mô tả:</label>
+          <br>
+          <textarea id="description" name="description"class="CreateTeam" rows="4"></textarea>
+          <br>
+          <button type="button" class="addnewTeam" onclick="hideModal()">Back</button>
+          <button type="button" class="back" onclick="showModalPlayer()">Next</button>
+        </form>
+      </div>
+      <div class="modalListPlayer" style="display: none;">
+        <div class="addListPlayer">
+          <div class="player-team-side">
+            <h3 class="player-heading">Player in Team</h3>
+            <div class="player-filters">
+              <span class="player-name">Name</span>
+              <span class="player-shirt-number">Shirt Number</span>
+              <span class="player-goal">Goal</span>
+              <span ></span>
+            </div>
+            <ul class="teamPlayerListModal">
+              <!-- Danh sách cầu thủ trong team sẽ được hiển thị ở đây -->
+            </ul>
+          </div>
+          <div class="divider"></div>
+          <div class="player-free-side">
+            <h3 class="player-heading">Free Players</h3>
+            <div class="player-filters">
+              <span class="player-name">Name</span>
+              <span class="player-shirt-number">Shirt Number</span>
+              <span class="player-goal">Goal</span>
+              <span ></span>
+            </div>
+            <ul class="playerListModal">
+              <!-- Danh sách cầu thủ tự do sẽ được hiển thị ở đây -->
+            </ul>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button type="button" class="addnewTeam" onclick="hideModalListPlayer()">Back</button>
+          <button type="button" class="back" onclick="addTeam()">Thêm</button>
+        </div>
+      </div>
+      
+      <div id="teamFormContainer"></div>
+      <!-- Hiển thị danh sách đội bóng -->
+      <div class="team-list">
+        <h3></h3>
+        <ul class="team-list-ul">
+          <% data.teams.forEach(function(team) { %>
+          <li class="team-list-li">
+            <img src="<%= team.logo %>" alt="<%= team.name %> Logo">
+            <span><%= team.name %></span>
+            <button class="delete-button" data-team-id="<%= team.id %>" onclick="deleteListItem(this)">Xóa</button>
+          </li>
+          <% }); %>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script src="/script/newSeason.js"></script>
+</body>
+</html>

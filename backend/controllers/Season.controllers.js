@@ -1,103 +1,249 @@
-import {Season} from "../models/Season.model"
-export const getAllSeason = async (req, res) => {
+import Season from "../models/Season.model.js";
+import TeamSeason from "../models/TeamSeason.model.js";
+import Team from "../models/Team.model.js";
+
+// CREATE season
+export const createSeason = async (req, res) => {
     try {
-      const season = await Season.find();
-      if (!season) {
-        return res.status(404).json({
-          message: "Cant not get all Season!",
+        // Fetch all seasons
+        let dataSeason = await Season.find();
+
+        // Sort seasons by yearEnd in descending order
+        dataSeason = dataSeason.sort((a, b) => new Date(b.yearEnd) - new Date(a.yearEnd));
+        
+        // Get the most recent season
+        const mostRecentSeason = dataSeason[0];
+
+        console.log(req.body);
+
+        // Create a new season with the provided data
+        const newSeason = new Season(req.body);
+
+        // Validate the new season's start and end year
+        if (newSeason.yearStart > mostRecentSeason.yearStart && newSeason.yearEnd > mostRecentSeason.yearEnd) {
+            // Save the new season to the database
+            await newSeason.save();
+            return res.status(201).json({
+                message: "Create Season successfully",
+                data: newSeason,
+            });
+        } else {
+            // Return a 400 error if the season's years are invalid
+            return res.status(400).json({
+                message: "Thong tin season sai",
+                data: mostRecentSeason,
+            });
+        }
+    } catch (error) {
+        // Return a 500 error if something goes wrong
+        return res.status(500).json({
+            message: error.message,
         });
+    }
+};
+  // get all season
+  export const getAllSeason = async (req, res) => {
+    try {
+      const data = await Season.find();
+      if (!data) {
+        return res.status(400).render('pages/error', { data:"Cant not get all season" });
       }
-      return res.status(200).json({
-        message: "Success!",
-        data: season,
-      });
+      data.sort((a, b) => b.yearEnd - a.yearEnd);
+      return res.render("pages/season", {
+        data
+    });
     } catch (error) {
       return res.status(500).json({
-        name: error.name,
         message: error.message,
       });
     }
   };
-export const getOneSeason = async (req,res) => {
+  // get season by id
+  export const getSeasonById = async (req, res) => {
     try {
-      const {idSeason} = req.params;
-      const season = await Season.findById(idSeason)
-      if(!season){
-        return res.status(404).json({
-          message: " Cannot find season"
-        })
+      // Lấy thông tin về mùa bóng đá
+      const dataSeason = await Season.findById(req.params.id);
+      if (!dataSeason) {
+        return res.status(200).render('pages/teaminseason', {
+          data: {
+            season: null,
+            teams: []
+          }
+        });
       }
-      return res.status(200).json({
-        message:"Success!",
-        datas:season
-      })
+  
+      // Lấy thông tin về các đội trong mùa
+      const dataTeamSeasons = await TeamSeason.find({ season: req.params.id });
+      if (!dataTeamSeasons || dataTeamSeasons.length === 0) {
+        return res.status(200).render('pages/teaminseason', {
+          data: {
+            season: dataSeason,
+            teams: []
+          }
+        });
+      }
+  
+      // Lấy thông tin về từng đội
+      const teamIds = dataTeamSeasons.map((teamSeason) => teamSeason.team);
+      const dataTeams = await Team.find({ _id: { $in: teamIds } });
+  
+      return res.status(200).render('pages/teaminseason', {
+        data: {
+          season: dataSeason,
+          teams: dataTeams
+        }
+      });
     } catch (error) {
-        return res.status(500).json({
-          name: error.name,
-          message: error.message
-        })
+      return res.status(500).json({
+        message: error.message
+      });
     }
   };
-  export const getSeasonById = async (req, res) => {
-    const { idSeason } = req.params;
+   // get team in season by id
+   export const getTeamInSeasonById = async (req, res) => {
     try {
-        const season = await Season.findById(idSeason);
+      // Lấy thông tin về mùa bóng đá
+      const dataSeason = await Season.findById(req.params.id);
+      if (!dataSeason) {
+        return res.status(200).render('pages/teaminseason', {
+          data: {
+            teams: []
+          }
+        });
+      }
+  
+      // Lấy thông tin về các đội trong mùa
+      const dataTeamSeasons = await TeamSeason.find({ season: req.params.id });
+      if (!dataTeamSeasons || dataTeamSeasons.length === 0) {
+        return res.status(200).render('pages/newseason', {
+          data: {
+            season: dataTeamSeasons,
+            teams: []
+          }
+        });
+      }
+  
+      // Lấy thông tin về từng đội
+      const teamIds = dataTeamSeasons.map((teamSeason) => teamSeason.team);
+      const dataTeams = await Team.find({ _id: { $in: teamIds } });
+
+      return res.status(200).render('pages/newseason',{
+        data: {
+          season: dataSeason,
+          teams: dataTeams,
+        },
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  };
+  // getbyname
+  export const getSeasonByName = async (req, res) => {
+    try {
+        const name = req.query.name.toString() || "";
+        const season = await Season.findOne({ name: name });
         if (!season) {
-            return res.status(404).json({ message: 'Season not found' });
+            return res.status(404).json({
+                message: "Season not found",
+            });
         }
-        return res.status(200).json({ message: 'Success', data: season });
+        return res.status(200).json({
+            data: season,
+        });
     } catch (error) {
-        return res.status(500).json({ message: 'Failed to get season' });
+        res.status(500).json({
+            errorName: error.name,
+            message: error.message,
+        });
     }
 };
-  export const createSeason = async (req, res) => {
-      try {
-        const {
-          year_start, year_end
-        } = req.body;
-        const newSeason = new Season({
-          year_start,
-          year_end
-        });
-        await newSeason.save();
-        return res.status(201).json({
-            message:'Season created successfully',
-            Season: newSeason
-        });
-      } catch (error) {
-        return res.status(500).json({message:'Failed create'})
-      }
-    };
-  export const updateSeason = async (req, res) => {
-    const { idSeason } = req.params;
-    const { year_start, year_end } = req.body;
-    try {
-        const updatedSeason = await Season.findByIdAndUpdate(
-            idSeason,
-            { year_start, year_end },
-            { new: true }
-        );
-        if (!updatedSeason) {
-            return res.status(404).json({ message: 'Season not found' });
-        }
-        return res.status(200).json({ message: 'Season updated successfully', data: updatedSeason });
-    } catch (error) {
-        return res.status(500).json({ message: 'Failed to update season' });
-    }
-};
+
+  // delete season
   export const deleteSeason = async (req, res) => {
-  const { idSeason } = req.params;
-  try {
-      const deletedSeason = await Season.findByIdAndDelete(idSeason);
-      if (!deletedSeason) {
-          return res.status(404).json({ message: 'Season not found' });
+    try {
+      const dataSeasonDelete = await Season.findByIdAndDelete(req.params.id);
+      if (!dataSeasonDelete) {
+        return res.status(400).json({
+          message: "Cant not delete season",
+        });
       }
-      return res.status(200).json({ message: 'Season deleted successfully' });
-  } catch (error) {
-      return res.status(500).json({ message: 'Failed to delete season' });
+      await TeamSeason.deleteMany({ season: req.params.id });
+      return res.status(200).json({
+        message: "Success",
+        data: dataSeasonDelete,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  };
+  // update season
+  export const updateSeason = async (req, res) => {
+    try {
+      // Kiểm tra nếu có req.body
+      if (!req.body) {
+        return res.status(400).json({
+          message: "Yêu cầu không hợp lệ",
+        });
+      }
+  
+      // Lấy thông tin về mùa bóng đá
+      console.log(req.params.id);
+      console.log(req.body);
+      const dataSeason = await Season.findById(req.params.id);
+      if (!dataSeason) {
+        return res.status(404).json({
+          message: "Không tìm thấy mùa bóng đá",
+        });
+      }
+      dataSeason.name = req.body.name.trim();
+      dataSeason.yearStart = req.body.yearStart;
+      dataSeason.yearEnd = req.body.yearEnd;
+      await dataSeason.save();
+      
+  
+      return res.status(201).json({
+        message: "Cập nhật mùa bóng đá thành công",
+        data: dataSeason,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: error.message,
+      });
+    }
+  };
+  // get name season
+ export const getName = async (req, res) => {
+  let name = req.body.name.trim();
+
+  // Kiểm tra nếu name.length == 0
+  if (name.length == 0) {
+    try {
+      const searchResults = await Season.find({ 
+        // Tìm kiếm tất cả các mục trừ một trường hợp cụ thể
+        name: { $not: { $eq: "Deafau" } } // Tên không bằng name
+      })
+        .select('_id name yearStart yearEnd')
+        .exec();
+      res.send({ name: searchResults });
+    } catch (err) {
+      console.error("Error:", err);
+      res.status(500).send("Internal Server Error");
+    }
+    return;
+  }
+
+  try {
+    const searchResults = await Season.find({ name: { $regex: new RegExp('^' + name + '.*', 'i') } })
+      .select('_id name yearStart yearEnd')
+      .limit(10)
+      .exec();
+    res.send({ name: searchResults });
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).send("Internal Server Error");
   }
 };
-// Sử dụng deleteSeason trong route của bạn
-// Ví dụ: app.delete('/seasons/:seasonId', deleteSeason);
-// Sử dụng updateSeason trong route của bạn
-// Ví dụ: app.put('/seasons/:seasonId', updateSeason);

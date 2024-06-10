@@ -4,34 +4,31 @@ import Team from "../models/Team.model.js"
 import TeamMatch from "../models/TeamMatch.model.js"
 import Match from "../models/Match.model.js"
 export const getAllPlayer = async (req, res) => {
-    try {
-      const page = parseInt(req.body.page) || 1;
-      const limit = parseInt(req.body.limit) || 10;
-      const player = await Player.find().skip((page-1)*limit).limit(limit).exec();
-      if (!player) {
-        return res.status(404).json({
-          message: "Cant not get all player!",
-        });
-      }
-      const count = await Player.countDocuments();
-      const totalPage = Math.ceil(count / limit);
-      return res.render('pages/player',({
-        data:player,
-        totalPlayers:count,
-        totalPages : totalPage,
-        currentPage : page
-      }))
-      // return res.status(200).json({
-      //   message: "Success!",
-      //   data: player,
-      // });
-    } catch (error) {
-      return res.status(500).json({
-        name: error.name,
-        message: error.message,
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const players = await Player.find().skip((page - 1) * limit).limit(limit).exec();
+    if (!players) {
+      return res.status(404).json({
+        message: "Cannot get all players!",
       });
     }
-  };
+    const count = await Player.countDocuments();
+    const totalPage = Math.ceil(count / limit);
+    return res.render('pages/player', {
+      data: players,
+      totalPlayers: count,
+      totalPages: totalPage,
+      currentPage: page
+    });
+  } catch (error) {
+    return res.status(500).json({
+      name: error.name,
+      message: error.message,
+    });
+  }
+};
+
   export const getOnePlayer = async (req,res) => {
     try {
       const page = parseInt(req.params.page)||1;
@@ -175,3 +172,34 @@ export const getEventsByMatch = async (req, res) => {
     });
   }
 }
+////////////////////////////////////////////////////////////////
+export const getAllPlayersWithStatusZero = async (req, res) => {
+  try {
+      // Lấy tất cả các cầu thủ có status = 0 từ cơ sở dữ liệu
+      const players = await Player.find({ status: 0 });
+      // Trả về JSON chứa danh sách các cầu thủ
+      return res.status(201).json({
+          data: players,
+      });
+  } catch (error) {
+      // Xử lý lỗi nếu có bất kỳ lỗi nào xảy ra trong quá trình lấy dữ liệu
+      console.error('Error getting players:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
+export const updatePlayerStatus = async (req, res) => {
+  try {
+      const { playerIds } = req.body;
+
+      // Cập nhật status của các player có trong playerIds từ 0 sang 1
+      await Player.updateMany(
+          { _id: { $in: playerIds } },
+          { $set: { status: 1 } }
+      );
+
+      res.status(200).json({ message: 'Player status updated successfully' });
+  } catch (error) {
+      console.error('Error updating player status:', error);
+      res.status(500).json({ message: 'Internal server error' });
+  }
+};

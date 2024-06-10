@@ -459,6 +459,7 @@ export const editPlayerMatch = async (req,res) => {
                     player.goal++;
                 }
                 matchCanUpdate.events = [...matchCanUpdate.events,newEvent];
+                console.log("Player: "+player)
                 const playerUpdate = await player.save();
                 if(playerUpdate!==null){
                     if(type=='goal'){

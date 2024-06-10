@@ -1,7 +1,11 @@
-
 import mongoose, { Schema } from "mongoose";
 const playerSchema = new mongoose.Schema(
     {
+        image:{
+            type:String,
+            required:true,
+            unique:true
+        },
         name:{
             type:String,
             required: true,

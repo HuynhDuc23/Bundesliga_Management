@@ -119,6 +119,7 @@ export const loginUser = async (req, res) => {
         message: "Success!",
         ...others,
         accsessToken: accessToken,
+        //refreshToken: refreshToken,
       });
     }
   } catch (error) {
