@@ -22,7 +22,7 @@
                 <div class="overlay" id="overlay"></div>
 
                 <form class="match-form" id="addMatchForm">
-                    <input type="hidden" id="ID_season" name="ID_season" value="<%= data.ID_season %>">
+                    <input type="hidden" id="ID_season" name="ID_season" value="<%= data.season %>">
                     <div class="input-container">
                         <div>
                             <label for="teamId1">Home Team:</label>
@@ -83,7 +83,7 @@
                 const submitButton = document.getElementById('addMatchSubmitButton');
                 const overlay = document.getElementById('overlay');
                 const matchContainer = document.getElementById('matchContainer');
-                const seasonId = '<%= data.ID_season %>';
+                const seasonId = '<%= data.season %>';
                 const teamId1Select = document.getElementById('teamId1');
                 const teamId2Select = document.getElementById('teamId2');
 

@@ -83,7 +83,7 @@ export const createUser = async (req, res) => {
     const user = await User.create({
       username: req.body.username,
       password: hashed,
-      email: req.body.email,
+      email: req.body.email, 
     });
     // const user = await User.create(req.body);
     if (!user) {

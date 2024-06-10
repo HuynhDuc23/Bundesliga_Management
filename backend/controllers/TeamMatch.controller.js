@@ -1,4 +1,4 @@
-import MatchTeam from "../models/Match_Team.model.js";
+import MatchTeam from "../models/TeamMatch.model.js";
 import Match from "../models/Match.model.js";
 import Team from "../models/Team.model.js";
 import Player from "../models/Player.model.js";
@@ -56,7 +56,7 @@ export const getMatchTeamByIdTeam = async (req, res) => {
 
 export const createMatchTeam = async (req, res) => {
     try {
-        const { date, ID_season, teamId1, teamId2, stadium, description } = req.body;
+        const { date, season, teamId1, teamId2, stadium, description } = req.body;
 
         const team1 = await Team.findById(teamId1 ).exec();
         const team2 = await Team.findById(teamId2).exec();
@@ -71,7 +71,7 @@ export const createMatchTeam = async (req, res) => {
         // Tạo mới đối tượng match
         const newMatch = new Match({
             date: date,
-            ID_season: ID_season,
+            season: season,
             stadium: stadium,
             description: description,
             players: players

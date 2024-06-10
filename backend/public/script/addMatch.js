@@ -1,6 +1,6 @@
 function addMatch() {
     const date = document.getElementById('date').value;
-    const ID_season = document.getElementById('ID_season').value;
+    const season = document.getElementById('season').value;
     const teamId1 = document.getElementById('teamId1').value;
     const teamId2 = document.getElementById('teamId2').value;
     const stadium = document.getElementById('stadium').value;
@@ -8,7 +8,7 @@ function addMatch() {
 
     const formData = {
         date: date,
-        ID_season: ID_season,
+        season: season,
         teamId1: teamId1,
         teamId2: teamId2,
         stadium: stadium,

@@ -1,5 +1,5 @@
 import Match from "../models/Match.model.js";
-import MatchTeam from "../models/Match_Team.model.js";
+import MatchTeam from "../models/TeamMatch.model.js";
 import Season from "../models/Season.model.js";
 import Player from "../models/Player.model.js";
 
@@ -47,8 +47,8 @@ export const getMatchById = async (req, res) => {
 // tìm match theo id của season
 export const getMatchByIdSS = async (req, res) => {
     try {
-      const ID_season = req.params.id;
-      const match = await Match.find({ID_season: ID_season});
+      const season = req.params.id;
+      const match = await Match.find({season: season});
       if (!match) {
         return res.status(404).json({ match: "Match not found" });
       }
@@ -138,7 +138,7 @@ export const getRanking = async (req, res) => {
 
   try {
       // Lấy tất cả các trận đấu thuộc mùa giải cụ thể
-      const matches = await Match.find({ ID_season: seasonId }).exec();
+      const matches = await Match.find({ season: seasonId }).exec();
 
       // Khởi tạo một đối tượng để lưu điểm số của từng đội
       const teamScores = {};
