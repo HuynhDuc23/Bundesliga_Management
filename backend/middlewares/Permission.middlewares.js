@@ -4,7 +4,6 @@ dotenv.config();
 // verify token
 export const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
-  // Bearer 12312312323123123123231231323v value gui len
   if (token) {
     const accessToken = token.split(" ")[1];
     jwt.verify(accessToken, process.env.SECRETKEY_ACCESS_KEY, (err, user) => {
@@ -14,6 +13,7 @@ export const verifyToken = (req, res, next) => {
           message: "Token is not valid",
         });
       }
+      console.log(req.user);
       req.user = user;
       next();
     });
@@ -23,12 +23,28 @@ export const verifyToken = (req, res, next) => {
     });
   }
 };
+
+// AUTHEN  AND AUTHORIZATION
 export const verifyTokenAdminAuth = (req, res, next) => {
   verifyToken(req, res, () => {
-    if (req.user.id == req.param.id || req.user.admin) {
+    console.log(req.user.admin);
+    // decode tron g token + voi id gui param
+    if (req.user.id == req.param.id || req.user.admin == 'ADMIN') {
+      // de xoa 1 user : 1 chinh no 2 la admin
       next();
     } else {
-      return res.status(403).json("You're not allowed to delete other");
+      return res.status(403).json("You're not allowed to delete other if delete user authorize ' admin role '");
+    }
+  });
+};
+
+export const verifyTokenWithAdmin = (req, res, next) => {
+  verifyToken(req, res, () => {
+    console.log(req.user.admin);
+    if (req.user.admin == 'ADMIN') {
+      next();
+    } else {
+      return res.status(403).json("Sucessfully authorized");
     }
   });
 };

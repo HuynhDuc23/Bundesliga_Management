@@ -5,15 +5,19 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import router from "./routers/index.js";
 import connection from "./utils/Connection.js";
-import path from 'path'
-const __dirname = path.resolve();
+import path from 'path';
 const app = express();
 app.set('view engine','ejs')
-app.use(express.static(path.join(__dirname,'public')));
+//app.use(express.static(path.join(__dirname,'public')));
 app.use(cors()); // chan cors khoi loi
 app.use(cookieParser()); // tao cookie va gan cookie
 app.use(express.json()); // Sử dụng middleware express.json() để phân tích dữ liệu JSON từ các yêu cầu HTTP
-app.use(express.urlencoded({ extended: true }));
+
+app.use(express.urlencoded({ extended: true }))
+
+const __dirname = path.resolve();
+app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')));
 // env
 dotenv.config();
 const URL = process.env.URL;
@@ -23,16 +27,11 @@ const PORT = process.env.PORT;
 connection(URL);
 // routes : dinh tuyen router
 app.use("/api/v1", router);
-app.get("/",(req,rep) => {
-  const data = __dirname;
-  rep.render("index",{data})
-})
+
 app.listen(PORT, () => {
   console.log("Server is running");
 });
-app.get("/",(req,rep) => {
+app.get("/", (req, rep) => {
   const data = __dirname;
-  rep.render("index",{data})
+  rep.render("index", { data })
 })
-// AUTHENTICATION : Dang Nhap so sanh user name va password is
-// AUTHORI: Ban la ai co quyen lam gi , phan quyen

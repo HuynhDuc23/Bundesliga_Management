@@ -18,6 +18,7 @@ import playerRouter from "./player.router.js";
 import playerMatchRouter from "./player_match.router.js";
 // Team match
 import teamMatchRouter from "./team_match.router.js"
+import { verifyToken } from "../middlewares/Permission.middlewares.js";
 const router = express.Router();
 router.use(express.json());
 router.use(express.urlencoded({ extended: true }))
@@ -32,10 +33,11 @@ router.use("/matchteam", matchTeamRouter);
 router.use("/season", seasonRouter);
 router.use("/upload", routerImages);
 // user routes
-router.use("/season", seasonRouter);
-router.use("/teamSeasons",teamSeasonRouter);
+router.use("/season", verifyToken, seasonRouter);
+router.use("/teamSeasons", teamSeasonRouter);
 // team routes
 router.use("/team",teamRouter);
+//router.use("/team", teamRoute);
 // player routes
 router.use("/player", playerRouter);
 router.use("/playermatch",playerMatchRouter);

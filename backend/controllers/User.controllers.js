@@ -86,6 +86,7 @@ export const createUser = async (req, res) => {
       password: hashed,
       email: req.body.email,
       role: req.body.role,
+      admin: req.body.role
     });
     if (!user) {
       return res.status(400).json({
@@ -138,6 +139,52 @@ export const deleteUserById = async (req, res) => {
   }
 };
 // UPDATE USER AND ROLE
-export const updateUser = (req, res) => {
-  // user name , password , confirm password , email
+export const updateUser = async (req, res) => {
+  const userId = req.params.id;
+  const { roleId, admin } = req.body;
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const oldRole = await Role.findById(user.role);
+
+    if (roleId) {
+      const newRole = await Role.findById(roleId);
+
+      if (!newRole) {
+        return res.status(404).json({ error: 'Role not found' });
+      }
+
+      if (!newRole.user.includes(user.id)) {
+        newRole.user = [...newRole.user, user.id];
+        await newRole.save();
+      }
+
+      user.role = roleId;
+    }
+
+    if (admin !== undefined) {
+      if (user.admin && !admin) {
+        // chua xu ly +-1 duoc , tam thoi de luu lai nhung quyen user da tung co
+        oldRole.user -= 1;
+      } else if (!user.admin && admin) {
+        oldRole.user += 1;
+      }
+      let role = await Role.findById(roleId)
+      user.admin = role.name;
+      console.log(user.admin);
+    }
+
+    await user.save();
+    await oldRole.save();
+
+    res.json({ message: 'User updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
+
+

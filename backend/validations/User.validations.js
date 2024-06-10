@@ -2,7 +2,7 @@ import Joi from "joi";
 import pkg from "joi";
 const { ref } = pkg;
 export const registerValid = Joi.object({
-  username: Joi.string().required().min(6).max(20).messages({
+  username: Joi.string().required().min(4).max(20).messages({
     "string.empty": "Username cannot be empty",
     "any.required": "Username is required",
     "string.min": "Minimum username length is {#limit} characters",
@@ -35,7 +35,7 @@ export const registerValid = Joi.object({
 // key chuan theo Joi cho de phat trien , dev co the dat theo quy tac rieng
 
 export const loginValid = Joi.object({
-  username: Joi.string().required().min(6).max(20).messages({
+  username: Joi.string().required().min(4).max(20).messages({
     "string.empty": "Username cannot be empty",
     "any.required": "Username is required",
     "string.min": "Minimum username length is {#limit} characters",
@@ -50,7 +50,7 @@ export const loginValid = Joi.object({
 });
 
 export const createUserValid = Joi.object({
-  username: Joi.string().required().min(6).max(50).messages({
+  username: Joi.string().required().min(4).max(50).messages({
     "string.empty": "Username cannot be empty",
     "any.required": "Username is required",
     "string.min": "Minimum username length is {#limit} characters",

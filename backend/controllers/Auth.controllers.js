@@ -3,10 +3,13 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { registerValid, loginValid } from "../validations/User.validations.js";
 import dotenv from "dotenv";
+import uniqid from 'uniqid';
+import sendMail from "../utils/Email.js";
+import nodemailer from "nodemailer";
 dotenv.config();
 // save refresh token in list
 let listToken = [];
-// REGISTER
+// REGISTER USER
 export const registerUser = async (req, res) => {
   try {
     const { error } = registerValid.validate(req.body, {
@@ -15,12 +18,10 @@ export const registerUser = async (req, res) => {
     if (error) {
       const errors = error.details.map((error) => error.message);
       return res.status(400).json({
-        name: "bad_request",
+        name: "Bad request",
         data: errors,
       });
     }
-
-    // user_exists
     const userExists = await User.findOne({ username: req.body.username });
     if (userExists) {
       return res.status(400).json({
@@ -28,7 +29,6 @@ export const registerUser = async (req, res) => {
         data: "User already exists",
       });
     }
-    // email Exists
     const emailExists = await User.findOne({ password: req.body.email });
     if (emailExists) {
       return res.status(402).json({
@@ -36,16 +36,15 @@ export const registerUser = async (req, res) => {
         data: "Email already exists",
       });
     }
-
-    const salt = await bcrypt.genSalt(10); // tao chuoi ngau hien
-    const hashed = await bcrypt.hash(req.body.password, salt); // ma hoa + them chuoi
+    const salt = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash(req.body.password, salt);
     const user = await User.create({
       username: req.body.username,
       password: hashed,
       email: req.body.email,
     });
     return res.status(200).json({
-      name: "success creating user",
+      name: "Sucessfully Create Account",
       data: user,
     });
   } catch (error) {
@@ -55,6 +54,73 @@ export const registerUser = async (req, res) => {
     });
   }
 };
+
+export const registerAccount = async (req, res) => {
+  try {
+    const { error } = registerValid.validate(req.body, {
+      abortEarly: false,
+    });
+    if (error) {
+      const errors = error.details.map((error) => error.message);
+      return res.status(400).json({
+        name: "Bad request",
+        data: errors,
+      });
+    }
+    const { email, password } = req.body;
+    const userExists = await User.findOne({ username: req.body.username });
+    if (userExists) {
+      return res.status(400).json({
+        name: "Bad request !",
+        data: "User already exists",
+      });
+    }
+    const emailExists = await User.findOne({ email: req.body.email });
+    if (emailExists) {
+      return res.status(402).json({
+        name: "Bad request !",
+        data: "Email already exists",
+      });
+    }
+    // luu tam thoi duoi cookie
+    const token = uniqid();
+    res.cookie('dataregister', { ...req.body, token }, { httpOnly: true, maxAge: 2 * 60 * 1000 });
+    const html = ` 
+  Please click here to confirm the account, the email will take effect 2 minutes after the request. <a href=${process.env.SERVER}/api/v1/auth/final/${token}> Click Me </a>`;
+    await sendMail({ email, html, subject: 'Complete Registration' });
+    return res.json({
+      success: true,
+      mes: 'Please select email to confirm account, email will take effect in 2 minutes'
+    })
+  } catch {
+    return res.json({
+      name: 'Bad request',
+      data: 'Invalid , Please re-enter the information'
+    })
+  }
+}
+export const finalRegister = async (req, res) => {
+  const cookie = req.cookies;
+  const { token } = req.params;
+  if (!cookie || cookie?.dataregister?.token !== token) {
+    res.status(404).json({
+      name: 'Invalid',
+      data: "The verification email has expired, please re-register or the token is incorrect",
+    })
+  }
+  const salt = await bcrypt.genSalt(10); // tao chuoi ngau hien
+  const hashed = await bcrypt.hash(cookie?.dataregister?.password, salt);
+  const user = await User.create({
+    username: cookie?.dataregister.username,
+    password: hashed,
+    email: cookie?.dataregister.email,
+  });
+  return res.status(200).json({
+    name: "Sucessfully Create Account",
+    data: user,
+  });
+}
+
 // LOGIN
 export const loginUser = async (req, res) => {
   try {
@@ -201,17 +267,76 @@ export const logoutUser = (req, res) => {
   });
 };
 
-// JWT : access token , refresh token
+export const forgotPassword = async (req, res) => {
+  try {
+    console.log(req.body.email);
+    let emailResult = await User.findOne({ email: req.body.email + "" });
+    console.log(emailResult);
+    if (!emailResult) {
+      return res.status(404).json({
+        name: 'Email not found',
+        data: 'Email not found  '
+      })
+    }
+    let otp = process.env.PASS;
+    // Lưu trữ thời gian hiện tại
+    const expirationTime = Date.now() + 60 * 1000; // Thời gian hết hạn: 1 phút từ thời điểm hiện tại
+    // send mail
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,   // EMAIL_USER =ductrantad23@gmail.com
+        pass: process.env.EMAIL_PASSWORD, // EMAIL_PASSWORD =xtaioddvqgdsxhyn
+      },
+    });
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: emailResult.email,
+      subject: 'OTP for Password Reset',
+      text: `Your OTP for password reset is: ${otp}`
+    });
+    res.status(200).send('OTP sent to your email.');
+  } catch {
+    res.status(500).send('Error sending OTP. Please try again later.');
+  }
 
-// iat : iussua atime : thoi gian tao token
+}
+export const verifyOtpAndResetPass = async (req, res) => {
+  try {
+    const { email, otp, password, timeIs } = req.body;
+    const currentTime = new Date();
+    const otpCreationTime = new Date(req.timeIs);
+    const timeDifference = currentTime - otpCreationTime;
+    const expired = timeDifference > (1 * 60 * 1000);
+    if (otp == process.env.PASS && !expired) {
+      const salt = await bcrypt.genSalt(10); // tao chuoi ngau hien
+      const hashed = await bcrypt.hash(req.body.password, salt);
+      const user = await User.findOneAndUpdate({ email: email }, { password: hashed });
+      if (!user) {
+        return res.status(401).json({
+          data: "User Not Found"
+        })
+      }
+      return res.status(200).json({
+        name: 'Sucessfully Reset Password',
+        data: user
+      })
+    }
+    return res.status(400).json({
+      name: 'OTP not found',
+      data: user,
+    })
+  } catch {
+
+  }
+}
 
 // STORE TOKEN : 3 cach
 // 1 localStorage : de bi tan cong XSS
 // STORE COOKIE : tan cong CSRF khac phuc SAMESITE
-
 // 2 HTTPOnly Cookie
-
 // 3 REDUX STORE -> access token
 // 3 HTTPOnly Cookie -> refresh token
-
 // BFF PATTERN

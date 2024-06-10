@@ -1,26 +1,27 @@
 import cloudinary from "../configs/Cloudinary.config.js";
-
+import dotenv from "dotenv";
+import User from "../models/User.model.js";
 export const uploadImages = async (req, res) => {
   try {
-    // khi tai file can cai them them thu vien multer
-    // gui anh di , req.files
-    const images = req.files.map((file) => file.path);
-    // nhung anh upload thanh cong
-    const uploadedImages = [];
+    let image = req.file;
+    if (image != undefined) {
+      let user = await User.findById(req.user.id);
+      console.log(user);
+      user.avatarUrl = image.path;
+      console.log("Link : " + user.avatarUrl);
+      await user.save();
 
-    for (let image of images) {
-      // chi hoat dong voi 1 anh 1
-      const results = await cloudinary.uploader.upload(image);
-      console.log(results);
-      uploadedImages.push({
-        url: results.secure_url,
-        publicId: results.public_id,
+      return res.status(200).json({
+        message: "Uploaded images Successfully",
+        data: image.path
       });
     }
-    return res.status(200).json({
-      message: "Uploaded images Successfully",
-      data: uploadedImages,
-    });
+    else {
+      return res.status(200).json({
+        message: "No Uploaded image "
+      });
+    }
+
   } catch (error) {
     return res.status(500).json({
       name: error.name,
