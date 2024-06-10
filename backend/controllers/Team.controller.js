@@ -299,7 +299,11 @@ export  const getAllTeam = async (req, res) => {
           message: " Cannot find Team by Id "+id
         })
       }
-      return res.status(200).json({
+      // return res.status(200).json({
+      //   message:"Success!",
+      //   data:team
+      // })
+      return res.render("pages/detailsteam",{
         message:"Success!",
         data:team
       })

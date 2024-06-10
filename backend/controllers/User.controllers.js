@@ -1,4 +1,3 @@
-import RoleModel from "../models/Role.model.js";
 import User from "../models/User.model.js";
 import Role from "../models/Role.model.js";
 import bcrypt from "bcrypt";

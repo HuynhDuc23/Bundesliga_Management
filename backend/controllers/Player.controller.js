@@ -4,34 +4,31 @@ import Team from "../models/Team.model.js"
 import TeamMatch from "../models/TeamMatch.model.js"
 import Match from "../models/Match.model.js"
 export const getAllPlayer = async (req, res) => {
-    try {
-      const page = parseInt(req.body.page) || 1;
-      const limit = parseInt(req.body.limit) || 10;
-      const player = await Player.find().skip((page-1)*limit).limit(limit).exec();
-      if (!player) {
-        return res.status(404).json({
-          message: "Cant not get all player!",
-        });
-      }
-      const count = await Player.countDocuments();
-      const totalPage = Math.ceil(count / limit);
-      return res.render('pages/player',({
-        data:player,
-        totalPlayers:count,
-        totalPages : totalPage,
-        currentPage : page
-      }))
-      // return res.status(200).json({
-      //   message: "Success!",
-      //   data: player,
-      // });
-    } catch (error) {
-      return res.status(500).json({
-        name: error.name,
-        message: error.message,
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const players = await Player.find().skip((page - 1) * limit).limit(limit).exec();
+    if (!players) {
+      return res.status(404).json({
+        message: "Cannot get all players!",
       });
     }
-  };
+    const count = await Player.countDocuments();
+    const totalPage = Math.ceil(count / limit);
+    return res.render('pages/player', {
+      data: players,
+      totalPlayers: count,
+      totalPages: totalPage,
+      currentPage: page
+    });
+  } catch (error) {
+    return res.status(500).json({
+      name: error.name,
+      message: error.message,
+    });
+  }
+};
+
   export const getOnePlayer = async (req,res) => {
     try {
       const page = parseInt(req.params.page)||1;
