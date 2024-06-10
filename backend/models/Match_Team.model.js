@@ -8,6 +8,10 @@ const matchTeamSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Team'
     },
+    score: {
+        type: Number,
+        default: 0
+    },
     goal: {
         type: Number,
         default: 0

@@ -33,4 +33,5 @@ const teamSchema = new mongoose.Schema(
     players:[{type:Schema.Types.ObjectId,ref:'Player'}]
 }
 )
-export default mongoose.model("Team", teamSchema);
+const Team = mongoose.model("Team", teamSchema);
+export default Team;

@@ -53,15 +53,12 @@ async function deleteMatch(matchId) {
     }
 }
 
-async function updateMatch(matchId, id1, id2) {
+async function updateMatch(matchId) {
     const addMatchForm = document.getElementById('addMatchForm');
     const formData = new FormData(addMatchForm);
     const formObj = Object.fromEntries(formData.entries());
     formObj.matchId = matchId;
-    formObj.id1 = id1;
-    formObj.id2 = id2;
-    console.log(formObj);
-    
+
     try {
         const response = await fetch('/api/v1/match/update', {
             method: 'POST',

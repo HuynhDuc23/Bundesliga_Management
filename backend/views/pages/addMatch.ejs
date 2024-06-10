@@ -9,25 +9,18 @@
         .match-details span {
             margin-top: 5px;
         }
-        
     </style>
     <%- include('../utils/link.ejs')%>
-
 </head>
 
 <body>
     <div class="center">
         <div class="w-1080">
-            <!-- Include Header -->
             <%- include('../partials/header') %>
 
-                <!-- Add Match Button -->
                 <button class="add-match-button" id="addMatchButton">Add Match</button>
-
-                <!-- Overlay -->
                 <div class="overlay" id="overlay"></div>
 
-                <!-- Form to add a new match -->
                 <form class="match-form" id="addMatchForm">
                     <input type="hidden" id="ID_season" name="ID_season" value="<%= data.ID_season %>">
                     <div class="input-container">
@@ -35,7 +28,7 @@
                             <label for="teamId1">Home Team:</label>
                             <!-- Sử dụng dropdown cho việc chọn đội bóng -->
                             <select id="teamId1" name="teamId1" required>
-                                <option value="">Chọn đội bóng </option>
+                                <option value="">Chọn đội bóng</option>
                                 <% data.teams.forEach(function(season) { %>
                                     <option value="<%=season._id%>">
                                         <%=season.name%>
@@ -68,7 +61,7 @@
                     <div class="input-description">
                         <div>
                             <label for="description">Description:</label>
-                            <textarea type="text" id="description" name="description"></textarea>
+                            <textarea id="description" name="description"></textarea>
                         </div>
                     </div>
                     <div>
@@ -91,6 +84,8 @@
                 const overlay = document.getElementById('overlay');
                 const matchContainer = document.getElementById('matchContainer');
                 const seasonId = '<%= data.ID_season %>';
+                const teamId1Select = document.getElementById('teamId1');
+                const teamId2Select = document.getElementById('teamId2');
 
                 submitButton.addEventListener('click', addMatch);
 
@@ -188,9 +183,8 @@
                                     <button class="delete-match">Delete</button>
                                 </div>
                             </div>
-                            `;
+                        `;
                             matchContainer.insertAdjacentHTML('afterbegin', matchHTML);
-
                         }
 
                         // Thêm sự kiện cho các nút sửa và xóa
@@ -207,7 +201,6 @@
                                 deleteMatch(matchId);
                             });
                         });
-
                     } catch (error) {
                         console.error(error);
                     }
@@ -238,41 +231,39 @@
                         } = await matchTeamsResponse.json();
 
                         var idteam1 = matchTeams[0].ID_team;
-                        // Lấy thông tin chi tiết của đội bóng từ API 3
-
                         var idteam2 = matchTeams[1].ID_team;
 
-
                         // Điền thông tin vào form
-                        //document.getElementById('matchId').value = matchId;
                         document.getElementById('teamId1').value = idteam1;
                         document.getElementById('teamId2').value = idteam2;
                         document.getElementById('date').value = new Date(match.data.date).toISOString().slice(0, 16);
                         document.getElementById('stadium').value = match.data.stadium;
                         document.getElementById('description').value = match.data.description;
 
+                        // Disable team selection fields
+                        document.getElementById('teamId1').disabled = true;
+                        document.getElementById('teamId2').disabled = true;
+
                         // Hiển thị form
                         document.getElementById('addMatchForm').style.display = 'block';
                         document.getElementById('overlay').style.display = 'block';
 
                         // Thay đổi nút submit thành "Update Match"
-
                         submitButton.textContent = 'Update Match';
 
                         submitButton.removeEventListener('click', addMatch);
                         submitButton.addEventListener('click', function (event) {
                             event.preventDefault();
-                            updateMatch(matchId, idteam1, idteam2);
+                            updateMatch(matchId);
                         });
                     } catch (error) {
                         console.error('Error fetching match details:', error);
                     }
                 }
 
-
-
                 // Hiển thị các trận đấu khi trang được tải
                 displayMatches();
+
             });
 
         </script>

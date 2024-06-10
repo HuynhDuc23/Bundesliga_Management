@@ -1,6 +1,7 @@
 import Match from "../models/Match.model.js";
 import MatchTeam from "../models/Match_Team.model.js";
 import Season from "../models/Season.model.js";
+import Player from "../models/Player.model.js";
 
 export const getAllMatches = async (req, res) => {
   try { 
@@ -63,7 +64,7 @@ export const getMatchByIdSS = async (req, res) => {
 export const updateMatch = async (req, res) => {
   try {
     // const id = req.params.id;
-    const { matchId, id1, id2, date, teamId1, teamId2, stadium, description }= req.body;
+    const { matchId, date, stadium, description }= req.body;
     const updatedMatch = await Match.findByIdAndUpdate(
       matchId,
       { date, stadium, description },
@@ -73,24 +74,24 @@ export const updateMatch = async (req, res) => {
       return res.status(404).json({ message: "Match not found" });
     }
 
-    const updatedMatchTeam1 = await MatchTeam.findOneAndUpdate(
-      { ID_match: matchId, ID_team: id1 }, 
-      { ID_team: teamId1 },  
-      { new: true }  
-    );
-    if (!updatedMatchTeam1) {
-      return res.status(404).json({ message: "MatchTeam not found" });
-    }
+    // const updatedMatchTeam1 = await MatchTeam.findOneAndUpdate(
+    //   { ID_match: matchId, ID_team: id1 }, 
+    //   { ID_team: teamId1 },  
+    //   { new: true }  
+    // );
+    // if (!updatedMatchTeam1) {
+    //   return res.status(404).json({ message: "MatchTeam not found" });
+    // }
 
-    const updatedMatchTeam2 = await MatchTeam.findOneAndUpdate(
-      { ID_match: matchId, ID_team: id2 }, 
-      { ID_team: teamId2 },  
-      { new: true }  
-    );
+    // const updatedMatchTeam2 = await MatchTeam.findOneAndUpdate(
+    //   { ID_match: matchId, ID_team: id2 }, 
+    //   { ID_team: teamId2 },  
+    //   { new: true }  
+    // );
     
-    if (!updatedMatchTeam2) {
-      return res.status(404).json({ message: "MatchTeam not found" });
-    }
+    // if (!updatedMatchTeam2) {
+    //   return res.status(404).json({ message: "MatchTeam not found" });
+    // }
 
     return res.status(200).json({
       message: "Match updated successfully",
@@ -109,7 +110,17 @@ export const deleteMatch = async (req, res) => {
     if (deletedMatchTeams.deletedCount === 0) {
       return res.status(404).json({ message: "No match teams found to delete" });
     }
+    const match = await Match.findById({ _id: id }).exec();
+    const players = match.players;
+    await Promise.all(players.map(async (playerId) => {
+      await Player.findByIdAndUpdate(
+          { _id: playerId._id}, 
+          { $pull: { matchs: { idMatch: id } } }, 
+          { new: true }
+      );
+  }));
 
+    
     // Xóa Match
     const deletedMatch = await Match.findByIdAndDelete({ _id: id });
     if (!deletedMatch) {

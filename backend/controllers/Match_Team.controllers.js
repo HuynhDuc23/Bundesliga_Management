@@ -1,5 +1,7 @@
 import MatchTeam from "../models/Match_Team.model.js";
 import Match from "../models/Match.model.js";
+import Team from "../models/Team.model.js";
+import Player from "../models/Player.model.js";
 
 export const getAllMatchTeams = async (req, res) => {
     try {
@@ -56,17 +58,37 @@ export const createMatchTeam = async (req, res) => {
     try {
         const { date, ID_season, teamId1, teamId2, stadium, description } = req.body;
 
+        const team1 = await Team.findById(teamId1 ).exec();
+        const team2 = await Team.findById(teamId2).exec();
+        
+        if (!team1 || !team2) {
+            throw new Error('Team not found');
+        }
+
+        const players = [...team1.players,...team2.players];
+        // console.log(players);
+        
         // Tạo mới đối tượng match
         const newMatch = new Match({
             date: date,
             ID_season: ID_season,
             stadium: stadium,
             description: description,
+            players: players
         });
-
+        
         // Lưu đối tượng match vào cơ sở dữ liệu và lấy _id của nó
         const match = await newMatch.save();
         const matchId = match._id;
+
+        // Thêm id match vào tất cả model player có id trong list id players
+        await Promise.all(players.map(async (playerId) => {
+            await Player.findByIdAndUpdate(
+                { _id: playerId._id}, 
+                { $addToSet: { matchs: { idMatch: matchId } } }, // Sử dụng $addToSet để tránh trùng lặp
+                { new: true }
+            );
+        }));
 
         // Tạo mới đối tượng matchteam thứ nhất với idmatch đã lấy
         const matchteam1 = new MatchTeam({
