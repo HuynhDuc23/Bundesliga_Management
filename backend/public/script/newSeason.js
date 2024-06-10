@@ -29,6 +29,7 @@ function createSeason() {
       if (data.message === "Create Season successfully") {
           alert('Season created successfully');
           createTeamSeasons(data.data._id);
+          window.history.back();
       } else {
           alert('Failed to create season: ' + data.message);
       }
