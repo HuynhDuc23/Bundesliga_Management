@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('../utils/link.ejs')%>
+    <style>
+        p{
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <%
+    function formatDate(dateStr) {
+        const dateObj = new Date(dateStr);
+        const year = dateObj.getFullYear();
+        const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+        const day = ('0' + dateObj.getDate()).slice(-2);
+        return `${year}/${month}/${day}`;
+    }
+    %>
+    <div class="center" style="position: relative;">
+        <div class="w-1080">
+            <%- include ('../partials/header') %>
+            <% 
+            var error = error ? error : false;
+            if(error){%>
+                <div class="error_popup" id="error-popup">
+                    <i id="error-close" class="fa-solid fa-circle-xmark"></i>
+                    <h4>Thêm sự kiện thất bại</h4>
+                    <p>
+                        <%=message%>
+                    </p>
+                </div>
+            <%}%>
+            <!-- <pre style="color: white;"> <%= JSON.stringify(matches, null, 2) %></pre> -->
+            <div style="width: 680px;margin: 20px auto; background-color: rgb(53, 44, 44);padding: 20px 40px">
+            <p style="margin: 10px auto 20px;font-size: 24px;text-align: center;">UPDATE EVENT PLAYER</p>
+            <div class="row">
+                <p style="font-size: 20px;margin: 16px 0px;">Match: <span><%=info[0].team.name%></span> - <span><%=info[1].team.name%></span></p>
+                <p>Date: <span><%=formatDate(matches.date)%></span></p>
+            </div>
+            <form action="/api/v1/playermatch/update/<%=matches._id%>" method="POST">
+                <div class="row">
+                <div style="width: 45%;">
+                    <p style="margin-bottom: 10px;" >Select players</p>
+                    <select class="form-select" aria-label="Default select example" id="select_player" name="idPlayer" required>
+                        <% 
+                        let selectedPlayerId = playerSelect ? playerSelect.toString() : null;
+                        for (var player of matches.players) { %>
+                            <% 
+                                let playerId = player._id.toString(); 
+                            %>
+                            <option value="<%= player._id %>" <% if (selectedPlayerId && selectedPlayerId == playerId) { %> selected <% } %> ><%= player.name %></option>
+                        <% } %>
+                    </select>
+                </div>
+                <div style="width: 45%;">
+                    <p style="margin-bottom: 10px;">Select type</p>
+                    <select class="form-select" aria-label="Default select example" id="select_action" name="type" required>
+                        <option value="goal" <% if(type=='goal') { %> selected <% } %> >Goal</option>
+                        <option value="foul" <% if(type=='foul') { %> selected <% } %> >Foul</option>
+                    </select>
+                </div>
+            </div>
+                <div style="margin-top: 10px;" class="row">
+                    <div style="width: 45%;">
+                        <p style="margin-bottom: 10px;">Minute</p>
+                        <input style="width: 50px;" type="number" min="1" name="minute" required value="<%=minute%>">
+                    </div>
+                    <div style="width: 45%;">
+                        <p style="margin-bottom: 10px;">Actions</p>
+                        <textarea name="action" id=""><%=action%></textarea>
+                    </div>
+                </div>
+                <div id="select_card" class="hidden-element" style="width: 45%;margin-top: 10px;">
+                    <p style="margin-bottom: 10px;">Select card</p>
+                    <select class="form-select" aria-label="Default select example" name="card" required>
+                        <option value="yellow"  <% if(card=='yellow') { %> selected <% } %>>Yellow</option>
+                        <option value="red" <% if(card=='red') { %> selected <% } %>>Red</option>
+                      </select>
+                </div>
+                <input style="padding: 4px 6px;background-color: crimson;color: white;border-radius: 4px;margin-top: 20px;"  type="submit" value="Update">                  
+            </form>
+            
+        </div>
+        </div>
+        </div>
+    </div>
+    <script src="/script/editEvent.js"></script>
+</body>
+</html>

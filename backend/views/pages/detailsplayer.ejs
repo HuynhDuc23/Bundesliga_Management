@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('../utils/link.ejs')%>
+    <style>
+        /* Hiển thị modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Nội dung của modal */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 60%;
+}
+
+/* Nút close */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<%
+function formatDate(dateStr) {
+    const dateObj = new Date(dateStr);
+    const year = dateObj.getFullYear();
+    const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+    const day = ('0' + dateObj.getDate()).slice(-2);
+    return `${year}/${month}/${day}`;
+}
+%>
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <%- include ('../partials/header') %>
+            <div id="eventModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <div id="infoMatch">
+                    </div>
+                    <div id="detailsEvent"></div>
+                </div>
+            </div>
+            
+          <div style="align-items: unset;" class="detail-player__content row">
+            <div class="col-45-percent">
+                <div class="detail-player__content--info">
+                    <img src="https://publish-p47754-e237306.adobeaemcloud.com/adobe/dynamicmedia/deliver/dm-aid--914bcfe0-f610-4610-a77e-6ea53c53f630/_330603286208.app.png?preferwebp=true&width=312" alt="" class="detail-player__content--img">
+                    <div class="detail-player__content--info-text">
+                        <p>Name: <%=data.name%></p>
+                        <p>Number: <%=data.shirtNumber%></p>
+                        <p><span>Heigh: <%=data.heigh%></span> - <span>Weight: <%=data.weight%></span></p>
+                        <p>Goal: <%=data.goal%></p> 
+                        <p>Team: <%=team.name%></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-45-percent">
+                <p class="detail-player__content--match-header">
+                    Match of Players
+                </p>
+                <ul class="detail-player__content--match">
+                    <% info.forEach(f => { %>
+                    <li class="detail-player__content--match--item" onclick="showMatchInfo('<%=f.idMatch%>','<%=data._id%>')">
+                        <div style="justify-content: unset;align-items: center;" class="row">
+                            <p class="detail-player__content--match--text"><%= f.data[0].team.name %> - <%= f.data[0].goal %> </p>
+                            <p style="margin: 0px 10px 6px;color: #412b2bcc;">vs</p>
+                            <p class="detail-player__content--match--text"> <%= f.data[1].goal %> - <%= f.data[1].team.name %></p>
+                        </div>
+                        <p class="detail-player__content--match--text">Description: <%= f.description %></p>
+                        <p class="detail-player__content--match--text">Date: <%= formatDate(f.date) %></p>
+                    </li>
+                    <% }) %> 
+                </ul>
+                         <!-- Pagination -->
+    <% if (totalPages > 1) { %>
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                        <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                    </li>
+                <% } %>
+            </ul>
+        </nav>
+    <% } %>
+            </div>
+          </div>
+        </div>
+    </div>
+    <script src="/script/detailsPlayer.js"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <%- include('../utils/link.ejs')%>
+    <style>
+        div>p{
+            color:#dadada;
+        }
+    </style>
+</head>
+<%
+let minuteString = (minutes) => {
+    if(minutes>90) return "90+"+(minutes-90);
+    return minutes.toString();
+}
+%>
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <%- include ('../partials/header') %>
+            <div style="width: 720px;margin: 60px auto;background-color: rgb(53, 44, 44);padding: 30px 30px;">
+                <div class="row">
+                    <p>Bundesliga</p>
+                    <%if(match.status==0) {%>
+                        <p>
+                            Chưa diễn ra
+                        </p>
+                    <%} else if(match.status==1){%>
+                        <p>
+                            Đang diễn ra
+                        </p>
+                    <%} else { %>
+                        <p>
+                            Kết thúc
+                        </p>
+                    <% }%>
+                </div>
+                <div class="row description__content">
+                    <div>
+                        <div class="flex-column">
+                            <img style="width: 60px;height: 60px;" src="<%=team1.info.logo%>" alt="">
+                            <p class="description__content--namefb"><%=team1.info.name%></p>
+                        </div>
+                    </div>
+                    <div class="row description__content--title">
+                            <p class="description__content--sub" ><%=team1.totalGoal%></p>
+                            <p class="description__content--sub">-</p>
+                            <p class="description__content--sub" ><%=team2.totalGoal%></p>
+                    </div>
+                    <div>
+                        <div class="flex-column" >
+                            <img style="width: 60px;height: 60px;" src="<%=team2.info.logo%>" alt="">
+                            <p class="description__content--namefb"><%=team2.info.name%></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="devide"></div>
+
+                <%if(team1.dataGoal.length>0||team2.dataGoal.length>0){%>
+                <div class="row description__content--goal">
+                    <div>
+                        <%
+                        var goals = team1.dataGoal ? team1.dataGoal : [];
+                        goals.forEach(goal => {
+                        %>
+                        <p style="justify-content: unset;" class="row description__content--info">
+                            <span class="description__content--info__name"><%=goal.playerName%></span>
+                            <span>
+                                <%
+                                var minutes = goal.minutes ? goal.minutes : [];
+                                minutes.forEach(m=>{%>
+                                    <%=minuteString(m)%>'
+                                <%})%>
+                            </span>
+                        </p>
+                     <%                            
+                        })
+                     %>
+                    </div>
+                    <div class="description__content--iconfb" ><i class="fa-solid fa-futbol"></i></div>
+                    <div>
+                        <%
+                        var goals = team2.dataGoal ? team2.dataGoal : [];
+                        goals.forEach(goal => {
+                        %>
+                        <p class="row description__content--info">
+                            <span class="description__content--info__name"><%=goal.playerName%></span>
+                            <span><%
+                                var minutes = goal.minutes ? goal.minutes : [];
+                                minutes.forEach(m=>{%>
+                                    <%=minuteString(m)%>'
+                                <%})%></span>
+                        </p>
+                     <%                            
+                        })
+                     %>
+                    </div>
+                </div>
+                <% } if(team1.dataFould.length>0||team2.dataFould.length>0){ %>
+                    <div class="row description__content--goal">
+                        <div>
+                            <%
+                            var fouls = team1.dataFould ? team1.dataFould : [];
+                            fouls.forEach(foul => {
+                            %>
+                            <p style="justify-content: unset" class="row description__content--info">
+                                <span class="description__content--info__name"><%=foul.playerName%></span>
+                                <span class="row">
+                                    <%
+                                    var minutes = foul.minutes ? foul.minutes : [];
+                                    var cards = foul.card ? foul.card : [];
+                                    for(var i = 0 ; i < minutes.length ; i++){
+                                    %>
+                                        <span class="color__body--sub-fb"><%=minuteString(minutes[i])%>'</span> 
+                                        <%if(cards[i] == 'yellow'){%>
+                                            <img class="description__content--info__foul" src="/img/yellow_card.png" alt="">
+                                        <%} else {%>
+                                            <img class="description__content--info__foul" src="/img/red_card.png" alt="">
+                                        <%}%>
+                                </span>
+                                <%}%>
+                            </p>
+                         <%                            
+                            })
+                         %>
+                        </div>
+                        <img class="description__content--icon_card" src="/img/icon_card.png" alt="">
+                        <div>
+                            <%
+                            var fouls = team2.dataFould ? team2.dataFould : [];
+                            fouls.forEach(foul => {
+                            %>
+                            <p style="justify-content: unset" class="row description__content--info">
+                                <span class="description__content--info__name"><%=foul.playerName%></span>
+                                <span class="row">
+                                    <%
+                                    var minutes = foul.minutes ? foul.minutes : [];
+                                    var cards = foul.card ? foul.card : [];
+                                    for(var i = 0 ; i < minutes.length ; i++){
+                                    %>
+                                        <span class="color__body--sub-fb"><%=minuteString(minutes[i])%>'</span> 
+                                        <%if(cards[i] == 'yellow'){%>
+                                            <img class="description__content--info__foul" src="/img/yellow_card.png" alt="">
+                                        <%} else {%>
+                                            <img class="description__content--info__foul" src="/img/red_card.png" alt="">
+                                        <%}%>
+                                </span>
+                                <%}%>
+                            </p>
+                         <%                            
+                            })
+                         %>
+                        </div>
+                    </div>
+                <%}%>
+                    <div style="margin: 10px 0px;" class="devide"></div>
+                    <p>Diễn biến chính của trận đấu</p>
+                    <div style="padding: 0px 28px;">
+                        <% listEvents.forEach(e => { %>
+                            <div class="details_match--content">
+                                <% if (e.type == 'goal') { %>
+                                    <div class="row mg-10-text">
+                                        <p>
+                                            <span>GOALLLL</span>
+                                            <i class="fa-solid fa-futbol"></i>
+                                        </p>
+                            
+                                        <p><%=minuteString(e.minutes[0])%>'</p>
+                                    </div>
+                                <% } else if (e.type == 'foul') { %>  
+                                    <div class="row mg-10-text">
+                                        <p>
+                                            <% if (e.card[0] == 'yellow') { %>
+                                                <%if(e.out==true){%>
+                                                    <img class="description__content--info__foul" src="/img/yellow_card.png" alt="">
+                                                <%}%>
+                                                <img class="description__content--info__foul" src="/img/yellow_card.png" alt="">
+                                                <span>THẺ VÀNG</span>
+                                                <%if(e.out==true){%>
+                                                    <span>- Cầu thủ bị truất quyền thi đấu (2 thẻ vàng)</span>
+                                                <%}%>
+                                            <% } else if (e.card[0] == 'red') { %>
+                                                <img class="description__content--info__foul" src="/img/red_card.png" alt="">
+                                                <span>THẺ ĐỎ</span>
+                                
+                                                <span>- Cầu thủ bị truất quyền thi đấu</span>
+                                            <% } %>  
+                                        </p>
+                                        <p><%= e.minutes[0] %>'</p>
+                                    </div>
+                                <% } %>
+                                <div class="devide"></div>
+                                <div class="row mg-10-text">
+                                    <div class="details_match--content__info">
+                                        <p class="details_match--content__info--name"><%= e.playerName %></p>
+                                        <p class="details_match--content__info--sub"><%= e.nameTeam %><span> #<%= e.shirtNumber %></span></p>
+                                    </div>
+                                    <img style="height: 50px; width: 50px;" src="<%=e.logoTeam%>" alt="">
+                                </div>
+                            </div>
+                        <% }) %>
+
+                    </div>
+                    <p style="margin: 20px 0px 0px;">Stadium: <span><%=match.stadium%></span></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

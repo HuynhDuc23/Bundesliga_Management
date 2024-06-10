@@ -1,24 +1,18 @@
 import mongoose from "mongoose";
-const seasonSchema = new mongoose.Schema(
-  {
-    year_start: {
-      type: Number,
-      required: true,
-      minlength: 1,
-      maxlength: 4,
-      unique: true,
+
+const seasonSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
     },
-    year_end: {
-      type: Number,
-      required: true,
-      minlength: 1,
-      maxlength: 4,
-      unique: true,
+    yearStart: {
+        type: Number,
+        required: true
     },
-  },
-  {
-    timestamps: true,
-  }
-);
-seasonSchema.plugin(mongoosePaginate);
-export default mongoose.model("Season", seasonSchema);
+    yearEnd: {
+        type: Number,
+        required: true
+    }
+});
+const Season = mongoose.model("Season", seasonSchema);
+export default Season;

@@ -1,4 +1,4 @@
-import Season from "../models/Season.model"
+import {Season} from "../models/Season.model"
 export const getAllSeason = async (req, res) => {
     try {
       const season = await Season.find();
