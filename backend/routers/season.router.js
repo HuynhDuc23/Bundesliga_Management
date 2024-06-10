@@ -7,7 +7,8 @@ import {
   deleteSeason,
   getTeamInSeasonById,
   getSeasonByName,
-  getName
+  getName,
+  getAllSeasonMatch
 } from "../controllers/Season.controllers.js";
 import { verifyToken } from "../middlewares/Permission.middlewares.js";
 const seasonRouter = Router();
@@ -16,6 +17,7 @@ const seasonRouter = Router();
 seasonRouter.post('/', createSeason);
 seasonRouter.post('/getName', getName);
 seasonRouter.get('/', getAllSeason);
+seasonRouter.get('/getallseasonmatch', getAllSeasonMatch);
 seasonRouter.get('/:id', getSeasonById);
 seasonRouter.get('/findByNameSeason/:name', getSeasonByName);
 seasonRouter.get('/newSeason/:id', getTeamInSeasonById);
