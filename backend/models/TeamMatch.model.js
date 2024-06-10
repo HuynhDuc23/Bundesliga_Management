@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 const matchTeamSchema = new mongoose.Schema({
-    ID_match: {
+    match: {
         type: Schema.Types.ObjectId,
         ref: 'Match'
     },

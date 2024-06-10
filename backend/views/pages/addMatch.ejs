@@ -72,7 +72,6 @@
                 <div id="matchContainer"></div>
         </div>
     </div>
-
     <!-- Include Footer -->
     <%- include('../partials/footer') %>
         <script src="/script/addMatch.js"></script>
@@ -106,21 +105,20 @@
 
                 teamId1Select.addEventListener('change', updateTeamOptions);
                 teamId2Select.addEventListener('change', updateTeamOptions);
-            
+
                 function updateTeamOptions() {
                     const team1Value = teamId1Select.value;
                     const team2Value = teamId2Select.value;
-            
                     const allOptions = `<% data.teams.forEach(function(season) { %>
                     <option value="<%=season._id%>"><%=season.name%></option>
                 <% }); %>`;
-            
+
                     const team1Options = team1Value ? allOptions.replace(`value="${team1Value}"`, 'disabled') : allOptions;
                     const team2Options = team2Value ? allOptions.replace(`value="${team2Value}"`, 'disabled') : allOptions;
-            
+
                     teamId2Select.innerHTML = `<option value="">Chọn đội bóng</option>${team1Options}`;
                     teamId1Select.innerHTML = `<option value="">Chọn đội bóng</option>${team2Options}`;
-            
+
                     if (team1Value) teamId1Select.value = team1Value;
                     if (team2Value) teamId2Select.value = team2Value;
                 }

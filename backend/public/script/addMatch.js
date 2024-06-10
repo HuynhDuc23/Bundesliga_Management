@@ -41,6 +41,7 @@ function addMatch() {
 
 // Hàm để xóa trận đấu
 async function deleteMatch(matchId) {
+    console.log(matchId)
     try {
         const response = await fetch(`/api/v1/match/${matchId}`, {
             method: 'DELETE'

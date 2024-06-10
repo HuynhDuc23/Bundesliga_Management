@@ -6,22 +6,22 @@ export const getTeamInSeasonById = async (req, res) => {
   try {
     // Lấy id mùa bóng đá
     const idSeason = req.params.id;
+    console.log(idSeason);
     if (!idSeason) {
       return res.status(400).render('error', {
         data: "mùa không được tìm thấy "
       });
     }
-
     // Lấy thông tin về các đội trong mùa
     const dataTeamSeasons = await TeamSeason.find({
       season: idSeason
     });
+    console.log(dataTeamSeasons);
     if (!dataTeamSeasons || dataTeamSeasons.length === 0) {
       return res.status(400).render('pages/error', {
         data: "không có team nào trong mùa này"
       });
     }
-
     // Lấy thông tin về từng đội
     const teamIds = dataTeamSeasons.map((teamSeason) => teamSeason.ID_team);
     const dataTeams = await Team.find({
@@ -29,7 +29,7 @@ export const getTeamInSeasonById = async (req, res) => {
         $in: teamIds
       }
     });
-    
+    console.log("Data team: "+dataTeams)
     return res.status(200).render("pages/addMatch",{
       data: {
         season: idSeason,

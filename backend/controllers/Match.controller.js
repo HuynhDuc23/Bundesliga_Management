@@ -106,12 +106,12 @@ export const deleteMatch = async (req, res) => {
   try {
     const id = req.params.id;
     // Xóa tất cả các bản ghi MatchTeam liên quan đến Match
-    const deletedMatchTeams = await MatchTeam.deleteMany({ ID_match: id });
+    const deletedMatchTeams = await MatchTeam.deleteMany({ match: id });
     if (deletedMatchTeams.deletedCount === 0) {
       return res.status(404).json({ message: "No match teams found to delete" });
     }
-    const match = await Match.findById({ _id: id }).exec();
-    const players = match.players;
+    const imatch = await Match.findById({ _id: id }).exec();
+    const players = imatch.players;
     await Promise.all(players.map(async (playerId) => {
       await Player.findByIdAndUpdate(
           { _id: playerId._id}, 
@@ -144,9 +144,9 @@ export const getRanking = async (req, res) => {
       const teamScores = {};
 
       // Lặp qua từng trận đấu
-      for (const match of matches) {
+      for (const index of matches) {
           // Lấy danh sách MatchTeam của trận đấu
-          const matchTeams = await MatchTeam.find({ ID_match: match._id }).exec();
+          const matchTeams = await MatchTeam.find({ match: index._id }).exec();
 
           // Nếu có đúng 2 MatchTeam trong mỗi trận đấu
           if (matchTeams.length === 2) {
