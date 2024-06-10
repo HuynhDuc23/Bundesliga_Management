@@ -21,7 +21,7 @@
             <% data.forEach(item =>{ %>
                 <a class="teams_content__link" href="/api/v1/team/<%=item._id%>">
                     <div class="teams_content__boxitem">
-                        <img class="teams_content__boxitem--img" src="https://upload.wikimedia.org/wikipedia/vi/thumb/c/c7/Logo_Real_Madrid.svg/716px-Logo_Real_Madrid.svg.png" alt="">
+                        <img class="teams_content__boxitem--img" src="<%=item.logo%>" alt="">
                         <p class="teams_content__boxitem--name" style="color: #fff;"><%= item.name %></p>
                     </div>
                 </a>

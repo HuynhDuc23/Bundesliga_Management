@@ -12,7 +12,7 @@ const playerMatchSchema = new mongoose.Schema(
             {
                 type:{type:String, enum:['goal','foul'],required:true},
                 minutes:{type:Number,required:true},
-                score:{type:String}, // red card or yellow card 
+                action:{type:String,required:true}, // red card or yellow card 
                 card:{type:String,enum:['yellow','red']}, // Score a goal with what action
             }
         ]

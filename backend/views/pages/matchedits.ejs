@@ -11,36 +11,71 @@
         }
     </style>
 </head>
+<%
+function formatDate(dateStr) {
+    const dateObj = new Date(dateStr);
+    const year = dateObj.getFullYear();
+    const month = ('0' + (dateObj.getMonth() + 1)).slice(-2);
+    const day = ('0' + dateObj.getDate()).slice(-2);
+    return `${year}/${month}/${day}`;
+}
+%>
 <body>
     <div class="center">
         <div class="w-1080">
             <%- include ('../partials/header') %>   
             <p style="font-size: 22px;margin: 30px 0px;text-align: center;" >Edit event match</p>
+            <div class="match__season">
+                <select class="match__seasonSelect" id="seasonSelect">
+                    <%
+                        list.forEach((season) => {
+                     %>
+                     <option value="<%= season.name %>" <%= season.name === selectedSeason ? 'selected' : '' %>>Season - <%= season.name %></option>
+                     <%       
+                        })
+                    %>
+                </select>
+            </div>
+            <div style="margin-top: 62px;display: flex;flex-wrap: wrap;" >
             <% if (matches && Array.isArray(matches)) { %>
                 <% matches.forEach(e => { 
                     if (e.details && Array.isArray(e.details)) {
                  %>
+                 <div class="w-30" style="padding: 0px 10px;">
                  <a style="text-decoration: none;" href="/api/v1/playermatch/editevent/<%=e.match._id%>">
-                 <div class="w-33" style="background-color: rgb(53, 44, 44);padding: 6px 8px;">
+                 <div style="background-color: rgb(53, 44, 44);padding: 10px 16px;border-radius: 12px;">
                 <div class="row" >
                  <%  e.details.forEach(team => { %>
-                            <p><%= team.team.name %></p>
+                            <p style="margin: 0px 0px 10px;"><%= team.team.name %></p>
                         <% });
                     } %>
                 </div>
-                <p>Date: <%=e.match.date%></p>
-                <p>Description: <%=e.match.description%></p>
+                <p style="margin: 0px 0px 10px;">Date: <%=formatDate(e.match.date)%></p>
+                <p style="margin: 0px 0px 10px;">Description: <%=e.match.description%></p>
              </div>
-            </a>
+            </a>                          
+        </div>
                 <% });
                 %>
-        </a>
+                <div class="w-30" style="padding: 10px 6px;">
+                    <a style="text-decoration: none;" href="/api/v1/playermatch/editevent/">
+                    <div style="background-color: rgb(53, 44, 44);padding: 10px 16px;border-radius: 12px;">
+                   <div class="row" >
+                    <p>a</p>
+                    <p>b</p>
+                   </div>
+                   <p style="margin: 0px 0px 10px;">Date: 12-3-3</p>
+                   <p style="margin: 0px 0px 10px;">Description: kakaka</p>
+                </div>
+               </a>                          
+           </div>
+            </div>
             <% } else { %>
                 <p>No matches available</p>
             <% } %>
         </div>
         </div>
     </div>
-    <script src="../../script/searchTeamsByName.js"></script>
+    <script src="/script/matchEditBySeason.js"></script>
 </body>
 </html>
