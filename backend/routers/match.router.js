@@ -7,7 +7,7 @@ import {
   getMatchById,
   updateMatch,
   deleteMatch,
-} from "../controllers/Match.controllers.js";
+} from "../controllers/Match.controller.js";
 
 const matchRouter = Router();
 

@@ -5,7 +5,7 @@ import {
   createMatchTeam,
   getMatchTeamsByMatchId
 
-} from "../controllers/Match_Team.controllers.js";
+} from "../controllers/TeamMatch.controller.js";
 
 const matchTeamRouter = Router();
 
