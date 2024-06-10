@@ -27,12 +27,12 @@
           <span class="season-header">Name</span>
           <span class="season-header">Start Year</span>
           <span class="season-header">End Year</span>
-          <span class="season-span"></span>
           <% if (data.length > 0) { %>
             <a href="/api/v1/season/newSeason/<%= data[0]._id %>" class="season-detail-btn">New Season</a>
           <% } else { %>
             <a href="/api/v1/season/newSeason/6664168961e536f91c285577" class="season-detail-btn">New Season</a>
           <% } %>
+          <span class="season-span"></span>
         </li>
         <ul class="season-list">
           <% data.forEach(function(season) { %>

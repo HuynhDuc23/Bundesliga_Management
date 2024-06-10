@@ -30,7 +30,7 @@ export const createSeason = async (req, res) => {
         } else {
             // Return a 400 error if the season's years are invalid
             return res.status(400).json({
-                message: "Cannot create Season",
+                message: "Thong tin season sai",
                 data: mostRecentSeason,
             });
         }
@@ -216,11 +216,34 @@ export const createSeason = async (req, res) => {
     }
   };
   // get name season
-  export const getName = async (req,res)=> {
-    let name = req.body.name.trim();
+ export const getName = async (req, res) => {
+  let name = req.body.name.trim();
+
+  // Kiểm tra nếu name.length == 0
+  if (name.length == 0) {
+    try {
+      const searchResults = await Season.find({ 
+        // Tìm kiếm tất cả các mục trừ một trường hợp cụ thể
+        name: { $not: { $eq: "Deafau" } } // Tên không bằng name
+      })
+        .select('_id name yearStart yearEnd')
+        .exec();
+      res.send({ name: searchResults });
+    } catch (err) {
+      console.error("Error:", err);
+      res.status(500).send("Internal Server Error");
+    }
+    return;
+  }
+
+  try {
     const searchResults = await Season.find({ name: { $regex: new RegExp('^' + name + '.*', 'i') } })
       .select('_id name yearStart yearEnd')
       .limit(10)
       .exec();
-    res.send({name : searchResults});
-  };
+    res.send({ name: searchResults });
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).send("Internal Server Error");
+  }
+};
