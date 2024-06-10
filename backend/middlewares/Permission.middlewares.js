@@ -29,7 +29,7 @@ export const verifyTokenAdminAuth = (req, res, next) => {
   verifyToken(req, res, () => {
     console.log(req.user.admin);
     // decode tron g token + voi id gui param
-    if (req.user.id == req.param.id || req.user.admin == 'admin') {
+    if (req.user.id == req.param.id || req.user.admin == 'ADMIN') {
       // de xoa 1 user : 1 chinh no 2 la admin
       next();
     } else {
@@ -41,7 +41,7 @@ export const verifyTokenAdminAuth = (req, res, next) => {
 export const verifyTokenWithAdmin = (req, res, next) => {
   verifyToken(req, res, () => {
     console.log(req.user.admin);
-    if (req.user.admin == 'admin') {
+    if (req.user.admin == 'ADMIN') {
       next();
     } else {
       return res.status(403).json("Sucessfully authorized");

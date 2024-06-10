@@ -12,5 +12,5 @@ usersRouter.get("/", verifyToken, getAllUsers); // verifyToken
 usersRouter.get("/:id", verifyToken, getUsersById);
 usersRouter.delete("/:id", verifyToken, verifyTokenAdminAuth, deleteUserById);
 usersRouter.post("/", verifyToken, verifyTokenWithAdmin, createUser);
-usersRouter.patch("/:id", updateUser);
+usersRouter.patch("/:id", verifyToken, verifyTokenAdminAuth, updateUser);
 export default usersRouter;

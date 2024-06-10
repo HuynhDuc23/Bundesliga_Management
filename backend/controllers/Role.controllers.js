@@ -25,7 +25,7 @@ export const deleteRole = async (req, res) => {
   try {
     const data = await Role.findByIdAndDelete(req.params.id);
     if (!data) {
-      return res.status(404).json({
+      return res.status(400).json({
         message: "Role does not exist",
       });
     }

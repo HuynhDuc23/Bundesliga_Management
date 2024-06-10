@@ -4,12 +4,15 @@ import {
   registerUser,
   requestRefreshToken,
   logoutUser,
-} from "../controllers/Auth.Controllers.js";
+  registerAccount, finalRegister
+} from "../controllers/Auth.controllers.js";
 import { verifyToken } from "../middlewares/Permission.middlewares.js";
 
 const authRouter = Router();
 // RIGISTER
-authRouter.post("/register", registerUser);
+//authRouter.post("/register", registerUser);
+authRouter.post("/register2", registerAccount);
+authRouter.get("/final/:token", finalRegister);
 // LOGIN
 authRouter.post("/signin", loginUser);
 //REFRESH
