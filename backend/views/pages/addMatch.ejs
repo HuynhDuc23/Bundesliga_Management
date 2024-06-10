@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Match</title>
+    <style>
+        .match-details span {
+            margin-top: 5px;
+        }
+    </style>
+    <%- include('../utils/link.ejs')%>
+</head>
+
+<body>
+    <div class="center">
+        <div class="w-1080">
+            <%- include('../partials/header') %>
+
+                <button class="add-match-button" id="addMatchButton">Add Match</button>
+                <div class="overlay" id="overlay"></div>
+
+                <form class="match-form" id="addMatchForm">
+                    <input type="hidden" id="season" name="season" value="<%= data.season %>">
+                    <div class="input-container">
+                        <div>
+                            <label for="teamId1">Home Team:</label>
+                            <!-- Sử dụng dropdown cho việc chọn đội bóng -->
+                            <select id="teamId1" name="teamId1" required>
+                                <option value="">Chọn đội bóng</option>
+                                <% data.teams.forEach(function(season) { %>
+                                    <option value="<%=season._id%>">
+                                        <%=season.name%>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="teamId2">Away Team:</label>
+                            <select id="teamId2" name="teamId2" required>
+                                <option value="">Chọn đội bóng</option>
+                                <% data.teams.forEach(function(season) { %>
+                                    <option value="<%=season._id%>">
+                                        <%=season.name%>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-container">
+                        <div>
+                            <label for="stadium">Stadium:</label>
+                            <input type="text" id="stadium" name="stadium" required>
+                        </div>
+                        <div>
+                            <label for="matchTime">Match Time:</label>
+                            <input type="datetime-local" id="date" name="date" required>
+                        </div>
+                    </div>
+                    <div class="input-description">
+                        <div>
+                            <label for="description">Description:</label>
+                            <textarea id="description" name="description"></textarea>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit" id="addMatchSubmitButton">Add Match</button>
+                    </div>
+                </form>
+
+                <div id="matchContainer"></div>
+        </div>
+    </div>
+    <!-- Include Footer -->
+    <%- include('../partials/footer') %>
+        <script src="/script/addMatch.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', async function () {
+                const addMatchButton = document.getElementById('addMatchButton');
+                const addMatchForm = document.getElementById('addMatchForm');
+                const submitButton = document.getElementById('addMatchSubmitButton');
+                const overlay = document.getElementById('overlay');
+                const matchContainer = document.getElementById('matchContainer');
+                const seasonId = '<%= data.season %>';
+                const teamId1Select = document.getElementById('teamId1');
+                const teamId2Select = document.getElementById('teamId2');
+
+                submitButton.addEventListener('click', addMatch);
+
+                addMatchButton.addEventListener('click', function () {
+                    if (addMatchForm.style.display === 'none' || addMatchForm.style.display === '') {
+                        addMatchForm.style.display = 'block';
+                        overlay.style.display = 'block';
+                    } else {
+                        addMatchForm.style.display = 'none';
+                        overlay.style.display = 'none';
+                    }
+                });
+
+                overlay.addEventListener('click', function () {
+                    addMatchForm.style.display = 'none';
+                    overlay.style.display = 'none';
+                });
+
+                teamId1Select.addEventListener('change', updateTeamOptions);
+                teamId2Select.addEventListener('change', updateTeamOptions);
+
+                function updateTeamOptions() {
+                    const team1Value = teamId1Select.value;
+                    const team2Value = teamId2Select.value;
+                    const allOptions = `<% data.teams.forEach(function(season) { %>
+                    <option value="<%=season._id%>"><%=season.name%></option>
+                <% }); %>`;
+
+                    const team1Options = team1Value ? allOptions.replace(`value="${team1Value}"`, 'disabled') : allOptions;
+                    const team2Options = team2Value ? allOptions.replace(`value="${team2Value}"`, 'disabled') : allOptions;
+
+                    teamId2Select.innerHTML = `<option value="">Chọn đội bóng</option>${team1Options}`;
+                    teamId1Select.innerHTML = `<option value="">Chọn đội bóng</option>${team2Options}`;
+
+                    if (team1Value) teamId1Select.value = team1Value;
+                    if (team2Value) teamId2Select.value = team2Value;
+                }
+
+                // Hàm để hiển thị các trận đấu
+                async function displayMatches() {
+                    try {
+                        // Gọi API 1 để lấy danh sách trận đấu theo ID mùa giải
+                        const matchResponse = await fetch(`/api/v1/match/view/idseason/${seasonId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                        });
+
+                        if (!matchResponse.ok) throw new Error('Failed to fetch matches');
+                        const {
+                            match
+                        } = await matchResponse.json();
+console.log(match);
+
+                        // Duyệt qua từng trận đấu và hiển thị thông tin
+                        for (const matchItem of match) {
+                            // Gọi API 2 để lấy thông tin đội bóng từ ID trận đấu trong matchteam
+                            var idmatch = matchItem._id;
+                            const matchTeamsResponse = await fetch(`/api/v1/matchteam/view/idmatch/${idmatch}`, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                            });
+                            if (!matchTeamsResponse.ok) throw new Error('Failed to fetch match teams');
+                            const {
+                                matchTeams
+                            } = await matchTeamsResponse.json();
+
+                            var idteam1 = matchTeams[0].team;
+                            // Lấy thông tin chi tiết của đội bóng từ API 3
+                            const teamAResponse = await fetch(`/api/v1/team/view/idteam/${idteam1}`, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                            });
+                            if (!teamAResponse.ok) throw new Error('Failed to fetch team A');
+                            const {
+                                team: teamA
+                            } = await teamAResponse.json();
+
+                            var idteam2 = matchTeams[1].team;
+                            const teamBResponse = await fetch(`/api/v1/team/view/idteam/${idteam2}`, {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                            });
+                            if (!teamBResponse.ok) throw new Error('Failed to fetch team B');
+                            const {
+                                team: teamB
+                            } = await teamBResponse.json();
+
+                            // Tạo HTML hiển thị trận đấu với các nút sửa và xóa
+                            const matchHTML = `
+                            <div class="match" data-match-id="${matchItem._id}">
+                                <div class="team-info">
+                                    <img src="${teamA.logo}" alt="${teamA.name}">
+                                    <span>${teamA.name}</span>
+                                </div>
+                                <div class="match-details">
+                                    <span>${matchTeams[0].goal} - ${matchTeams[1].goal}</span>
+                                </div>
+                                <div class="team-info">
+                                    <img src="${teamB.logo}" alt="${teamB.name}">
+                                    <span>${teamB.name}</span>
+                                </div>
+                                <div class="match-details">
+                                    <span>Time: ${new Date(matchItem.date).toLocaleString()}</span>
+                                    <span>Stadium: ${matchItem.stadium}</span>
+                                </div>
+                                <div class="actions">
+                                    <button class="edit-match">Edit</button>
+                                    <button class="delete-match">Delete</button>
+                                </div>
+                            </div>
+                        `;
+                            matchContainer.insertAdjacentHTML('afterbegin', matchHTML);
+                        }
+
+                        // Thêm sự kiện cho các nút sửa và xóa
+                        document.querySelectorAll('.edit-match').forEach(button => {
+                            button.addEventListener('click', function (event) {
+                                const matchId = event.target.closest('.match').dataset.matchId;
+                                editMatch(matchId);
+                            });
+                        });
+
+                        document.querySelectorAll('.delete-match').forEach(button => {
+                            button.addEventListener('click', function (event) {
+                                const matchId = event.target.closest('.match').dataset.matchId;
+                                deleteMatch(matchId);
+                            });
+                        });
+                    } catch (error) {
+                        console.error(error);
+                    }
+                }
+
+                // Hàm để sửa trận đấu
+                async function editMatch(matchId) {
+                    try {
+                        // Gọi API để lấy thông tin chi tiết của trận đấu
+                        const response = await fetch(`/api/v1/match/view/idmatch/${matchId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                        });
+                        if (!response.ok) throw new Error('Failed to fetch match details');
+                        const match = await response.json();
+
+                        const matchTeamsResponse = await fetch(`/api/v1/matchteam/view/idmatch/${matchId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                        });
+                        if (!matchTeamsResponse.ok) throw new Error('Failed to fetch match teams');
+                        const {
+                            matchTeams
+                        } = await matchTeamsResponse.json();
+
+                        var idteam1 = matchTeams[0].team;
+                        var idteam2 = matchTeams[1].team;
+
+                        // Điền thông tin vào form
+                        document.getElementById('teamId1').value = idteam1;
+                        document.getElementById('teamId2').value = idteam2;
+                        document.getElementById('date').value = new Date(match.data.date).toISOString().slice(0, 16);
+                        document.getElementById('stadium').value = match.data.stadium;
+                        document.getElementById('description').value = match.data.description;
+
+                        // Disable team selection fields
+                        document.getElementById('teamId1').disabled = true;
+                        document.getElementById('teamId2').disabled = true;
+
+                        // Hiển thị form
+                        document.getElementById('addMatchForm').style.display = 'block';
+                        document.getElementById('overlay').style.display = 'block';
+
+                        // Thay đổi nút submit thành "Update Match"
+                        submitButton.textContent = 'Update Match';
+
+                        submitButton.removeEventListener('click', addMatch);
+                        submitButton.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            updateMatch(matchId);
+                        });
+                    } catch (error) {
+                        console.error('Error fetching match details:', error);
+                    }
+                }
+
+                // Hiển thị các trận đấu khi trang được tải
+                displayMatches();
+
+            });
+
+        </script>
+</body>
+
+</html>

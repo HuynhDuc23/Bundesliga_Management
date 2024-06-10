@@ -1,4 +1,3 @@
-
 import mongoose, { Mongoose, Schema } from "mongoose";
 const matchSchema = new mongoose.Schema(
     {
@@ -11,8 +10,7 @@ const matchSchema = new mongoose.Schema(
         },
         description:{
             type:String,
-            required:true,
-            minlength:10,
+
         },
         stadium:{   
             type:String,

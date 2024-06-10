@@ -1,6 +1,11 @@
 import { Router } from "express";
-import {getAllTeamJson,getPlayersInTeam,getAllTeam,createTeam,updateTeam,getOneTeam,deleteTeamById,getTeamsByName} from "../controllers/Team.controller.js"
+import {getTeamById,getTeamInSeasonById,getAllTeamJson,
+    getPlayersInTeam,getAllTeam,createTeam,updateTeam,
+    getOneTeam,deleteTeamById,getTeamsByName} from "../controllers/Team.controller.js"
+// export default teamRouter;
 const teamRouter = Router();
+teamRouter.get('/view/idseason/:id',getTeamInSeasonById);
+teamRouter.get('/view/idteam/:id',getTeamById);
 teamRouter.post('/json',getAllTeamJson);
 teamRouter.post('/',createTeam);
 teamRouter.get('/:id/players',getPlayersInTeam);

@@ -1,15 +1,21 @@
 import { Router } from "express";
 import {
-    createSeason,
-    getAllSeason,
-    getSeasonById,
-    updateSeason,
-    deleteSeason,
-    getTeamInSeasonById,
-    getSeasonByName,
-    getName
+getAllSeasonMatch,
+createSeason,
+getAllSeason,
+getSeasonById,
+updateSeason,
+deleteSeason,
+getTeamInSeasonById,
+getSeasonByName,
+getName
   } from "../controllers/Season.controllers.js";
+// const seasonRouter = Router();
+
+// export default seasonRouter;
+// import { Router } from "express";
 const seasonRouter = Router();
+seasonRouter.get('/getallseasonmatch',getAllSeasonMatch); 
 seasonRouter.post('/',createSeason);
 seasonRouter.post('/getName',getName);
 seasonRouter.get('/',getAllSeason);

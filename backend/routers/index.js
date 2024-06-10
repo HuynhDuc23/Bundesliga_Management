@@ -4,6 +4,9 @@ import express from "express";
 import authRouter from "./auth.router.js";
 import usersRouter from "./user.router.js";
 import roleRouter from "./role.router.js";
+
+import matchRouter from "./match.router.js";
+import matchTeamRouter from "./match_Team.router.js";
 import routerImages from "./upload.router.js";
 // Team
 import teamRouter from "./team.router.js";
@@ -16,9 +19,17 @@ import playerMatchRouter from "./player_match.router.js";
 // Team match
 import teamMatchRouter from "./team_match.router.js"
 const router = express.Router();
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }))
 router.use("/auth", authRouter);
 router.use("/user", usersRouter);
 router.use("/role", roleRouter);
+
+router.use("/team", teamRouter);
+
+router.use("/match", matchRouter);
+router.use("/matchteam", matchTeamRouter);
+router.use("/season", seasonRouter);
 router.use("/upload", routerImages);
 // user routes
 router.use("/season", seasonRouter);
