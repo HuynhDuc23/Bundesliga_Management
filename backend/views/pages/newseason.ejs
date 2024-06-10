@@ -14,22 +14,30 @@
       <%- include ('../partials/header') %>
       <div class="season-info">
         <h2 class="name-season">Create New Season</h2>
-        <form action="/create-season" method="POST">
-          <label for="seasonName">Name of Season:</label>
-          <input type="text" id="seasonName" name="seasonName" required>
-          <label for="yearBegin">Year Begin:</label>
-          <input type="number" id="yearBegin" name="yearBegin" required>
-          <label for="yearEnd">Year End:</label>
-          <input type="number" id="yearEnd" name="yearEnd" required>
+        <div class="form-container"> <!-- Container bọc các nhóm label và input -->
+          <div class="form-group"> <!-- Nhóm label và input -->
+            <label for="seasonName" class="label-season">Name of Season:</label>
+            <input type="text" id="seasonName" name="seasonName" class="input-season" required>
+          </div>
+          <div class="form-group"> <!-- Nhóm label và input -->
+            <label for="yearBegin" class="label-year-begin">Year Begin:</label>
+            <input type="text" id="yearBegin" name="yearBegin" class="input-year-begin" required>
+          </div>
+          <div class="form-group"> <!-- Nhóm label và input -->
+            <label for="yearEnd" class="label-year-end">Year End:</label>
+            <input type="text" id="yearEnd" name="yearEnd" class="input-year-end" required>
+          </div>
           <button type="button" class="CreateSeason" onclick="createSeason()">Create Season</button>
           <button type="button" class="addTeam" onclick="showModalListTeam()">Thêm Team</button>
-        </form>
+        </div>
+        
         <div class="modalListTeam">
           <form  class = "addListTeam" >
-            <button type="button" class="addTeam" onclick="showModal()">New Team</button>
             <ul class="teamListModal">
+              
             </ul>
-            <button type="button" class="addTeam" onclick="hideModalListTeam()">Back</button>
+            <button type="button" class="back" onclick="hideModalListTeam()">Back</button>
+            <button type="button" class="addnewTeam" onclick="showModal()">New Team</button>
           </form>
         </div>
 
@@ -51,8 +59,8 @@
           <br>
           <textarea id="description" name="description"class="CreateTeam" rows="4"></textarea>
           <br>
-          <button type="button" onclick="hideModal()">Back</button>
-          <button type="button" onclick="showModalPlayer()">Next</button>
+          <button type="button" class="addnewTeam" onclick="hideModal()">Back</button>
+          <button type="button" class="back" onclick="showModalPlayer()">Next</button>
         </form>
       </div>
       <div class="modalListPlayer" style="display: none;">
@@ -84,8 +92,8 @@
           </div>
         </div>
         <div class="modal-buttons">
-          <button type="button" onclick="hideModalListPlayer()">Back</button>
-          <button type="button" onclick="addTeam()">Thêm</button>
+          <button type="button" class="addnewTeam" onclick="hideModalListPlayer()">Back</button>
+          <button type="button" class="back" onclick="addTeam()">Thêm</button>
         </div>
       </div>
       
