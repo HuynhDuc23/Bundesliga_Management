@@ -5,6 +5,7 @@ import { registerValid, loginValid } from "../validations/User.validations.js";
 import dotenv from "dotenv";
 import uniqid from 'uniqid';
 import sendMail from "../utils/Email.js";
+import nodemailer from "nodemailer";
 dotenv.config();
 // save refresh token in list
 let listToken = [];
@@ -265,6 +266,72 @@ export const logoutUser = (req, res) => {
     message: "Logout successfully",
   });
 };
+
+export const forgotPassword = async (req, res) => {
+  try {
+    console.log(req.body.email);
+    let emailResult = await User.findOne({ email: req.body.email + "" });
+    console.log(emailResult);
+    if (!emailResult) {
+      return res.status(404).json({
+        name: 'Email not found',
+        data: 'Email not found  '
+      })
+    }
+    let otp = process.env.PASS;
+    // Lưu trữ thời gian hiện tại
+    const expirationTime = Date.now() + 60 * 1000; // Thời gian hết hạn: 1 phút từ thời điểm hiện tại
+    // send mail
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.EMAIL_USER,   // EMAIL_USER =ductrantad23@gmail.com
+        pass: process.env.EMAIL_PASSWORD, // EMAIL_PASSWORD =xtaioddvqgdsxhyn
+      },
+    });
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: emailResult.email,
+      subject: 'OTP for Password Reset',
+      text: `Your OTP for password reset is: ${otp}`
+    });
+    res.status(200).send('OTP sent to your email.');
+  } catch {
+    res.status(500).send('Error sending OTP. Please try again later.');
+  }
+
+}
+export const verifyOtpAndResetPass = async (req, res) => {
+  try {
+    const { email, otp, password, timeIs } = req.body;
+    const currentTime = new Date();
+    const otpCreationTime = new Date(req.timeIs);
+    const timeDifference = currentTime - otpCreationTime;
+    const expired = timeDifference > (1 * 60 * 1000);
+    if (otp == process.env.PASS && !expired) {
+      const salt = await bcrypt.genSalt(10); // tao chuoi ngau hien
+      const hashed = await bcrypt.hash(req.body.password, salt);
+      const user = await User.findOneAndUpdate({ email: email }, { password: hashed });
+      if (!user) {
+        return res.status(401).json({
+          data: "User Not Found"
+        })
+      }
+      return res.status(200).json({
+        name: 'Sucessfully Reset Password',
+        data: user
+      })
+    }
+    return res.status(400).json({
+      name: 'OTP not found',
+      data: user,
+    })
+  } catch {
+
+  }
+}
 
 // STORE TOKEN : 3 cach
 // 1 localStorage : de bi tan cong XSS

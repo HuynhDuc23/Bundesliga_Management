@@ -10,16 +10,17 @@ import seasonRouter from "./season.router.js";
 import teamSeasonRouter from "./teamseason.router.js";
 // player routes
 import playerRouter from "./player.router.js";
+import { verifyToken } from "../middlewares/Permission.middlewares.js";
 const router = express.Router();
 router.use("/auth", authRouter);
 router.use("/user", usersRouter);
 router.use("/role", roleRouter);
 router.use("/upload", routerImages);
 // user routes
-router.use("/season", seasonRouter);
+router.use("/season", verifyToken, seasonRouter);
 router.use("/teamSeasons", teamSeasonRouter);
 // team routes
-router.use("/team",teamRoute);
+router.use("/team", teamRoute);
 // player routes
 router.use("/player", playerRouter);
 export default router;

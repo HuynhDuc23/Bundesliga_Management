@@ -5,9 +5,10 @@ import fetch from 'node-fetch';
   try {
     // Mở trình duyệt Chrome
     const browser = await puppeteer.launch({ headless: false });
+    //const browser = await puppeteer.launch()
     const page = await browser.newPage();
 
-    // Đăng nhập và lấy token từ biến môi trường trong Postman
+    // Đăng nhập và lấy token
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NjY4ZTk5YjU3OTMzOWFjMzY5YmYzZiIsImFkbWluIjoiQURNSU4iLCJpYXQiOjE3MTgwMDE3NDIsImV4cCI6MTcxODAwNTM0Mn0.CGX6J61w05QmEAPYeHpA1nbXesOoAibxN9FRd9ziQKU";
 
     // Thiết lập header Authorization để gửi token

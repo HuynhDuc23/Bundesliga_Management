@@ -4,7 +4,7 @@ import {
   registerUser,
   requestRefreshToken,
   logoutUser,
-  registerAccount, finalRegister
+  registerAccount, finalRegister, forgotPassword, verifyOtpAndResetPass
 } from "../controllers/Auth.controllers.js";
 import { verifyToken } from "../middlewares/Permission.middlewares.js";
 
@@ -19,4 +19,8 @@ authRouter.post("/signin", loginUser);
 authRouter.post("/refresh", requestRefreshToken);
 // LOGOUT
 authRouter.post("/logout", verifyToken, logoutUser);
+// Forgot Password
+authRouter.post("/forgotPassword", forgotPassword);
+authRouter.patch("/verifyOtpAndResetPass", verifyOtpAndResetPass);
+
 export default authRouter;

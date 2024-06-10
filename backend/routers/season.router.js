@@ -15,9 +15,7 @@ const seasonRouter = Router();
 
 seasonRouter.post('/', createSeason);
 seasonRouter.post('/getName', getName);
-
-
-seasonRouter.get('/', verifyToken, getAllSeason);
+seasonRouter.get('/', getAllSeason);
 seasonRouter.get('/:id', getSeasonById);
 seasonRouter.get('/findByNameSeason/:name', getSeasonByName);
 seasonRouter.get('/newSeason/:id', getTeamInSeasonById);
