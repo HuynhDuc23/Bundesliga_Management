@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <%- include('../utils/link.ejs')%>
+</head>
+
+<body>
+  <div class="center">
+    <div class="w-1080">
+      <%- include ('../partials/header') %>
+      <div >
+        <div id="list" data="<%=JSON.stringify(data)%>"></div>
+        <div class="teams_search_containt">
+          <input class="teams_search" type="text" id="searchInput" placeholder="Enter name" onkeyup="sendData(this)">
+          <div class="teams_search_box--icon">
+            <img class="teams_search--icon" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAotJREFUSEvllkuojVEYhp8j15QYUMdlJPeQg+QeEykDI7coIU5kgIGYGaEwMCARQ7klBgwkJXIXEkXuuU9IIUm+N99/Wv69//N/HXt3BtZk7/b+3vdda32XdzXQTquhnXSJCHcEJgJDgV7AI+A68OZfNt2acD9gM7AY6FFF5CqwEzjelg0UCS8CDgDdAqRngfnAl0BsS0g14eUuqqBfwGHgNHAHeGffm4DJwCpggDPdBKYB36LieeHRwG2gA/ABmAPcKCDrChwEFvr/ew2zuq3CZ4DZDp4KXCohUuEpZgLw025nCPA0Ip6euA/w3kH7rWpXRgiAMX5LClcxbo3gUuEFnk/hJgFXIgQecx8YAVwAZkZwqfB6bw/hugNfIwQeow5QUb4F+kZwqfBS4JCDBgOPIwQecwSY5+lRmkpXKjwKuOuINcCeUvSfgE5elBqn+6zXmyO4fB+/suHR3/KlT536e4BkA7DD48JFmRdeC+x2El37shLhscBlayHVxDG/7sBeqXCnzj4Qxjv6lBXMOuBZjk1CK2yWb/cO0PAYBDwPqVIpLFxv4DwwMiFRn97zXI4DtDGNTC3NZ+X5hPFtMcN4GBEvcie50i4/lcZi0dKGlpgzKc+yTy2ZyibgRWsbKHsIyH1EOMuLTb6sh8A54Chwy8mHWX4fJEJ6JMitnhSJlwlHbi2LOWnWOTcBaIPT3UoreGoprPaTU6lGsqW2nGLd8TKvXEthcSs1MoqBiZCue4bPhpafay2ciV+zKdaYiL92+/yY/VYPYXGrpzVYsmuXR8ur63rijHy4efNFfxjoNfrXqteJMxFZ5KdqrVFv4cJ2/P+EfwPso2Yfp6I9kgAAAABJRU5ErkJggg==" />
+          </div>
+        </div>
+        <section id="search-results">
+
+        </section>
+        <li class="season-item">
+          <span class="season-header">Name</span>
+          <span class="season-header">Start Year</span>
+          <span class="season-header">End Year</span>
+          <% if (data.length > 0) { %>
+            <a href="/api/v1/season/newSeason/<%= data[0]._id %>" class="season-detail-btn">New Season</a>
+          <% } else { %>
+            <a href="/api/v1/season/newSeason/6664168961e536f91c285577" class="season-detail-btn">New Season</a>
+          <% } %>
+          <span class="season-span"></span>
+        </li>
+        <ul class="season-list">
+          <% data.forEach(function(season) { %>
+            <% if (season._id != "6664168961e536f91c285577") { %>
+              <li data-season-id="<%= season._id %>" class="season-item">
+                <span class="season-name">
+                  <%= season.name %>
+                </span>
+                <span class="season-year" id="begin">
+                  <%= season.yearStart %>
+                </span>
+                <span class="season-year" id="end">
+                  <%= season.yearEnd %>
+                </span>
+                <button onclick='makeEditable(this.parentElement)' id="buttonEdit" class="season-detail-btn">Sửa</button>
+                <button onclick='saveChanges(this.parentElement)' id="buttonSave" class="season-detail-btn" style="display: none; margin-right: 115px;">Lưu</button>
+                <a href="/api/v1/season/<%= season._id %>" id="buttonchitiet" class="season-detail-btn">Chi tiết</a>
+              </li>
+            <% } %>
+          <% }); %>
+        </ul>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src="/script/season.js"></script>
+</body>
+
+</html>

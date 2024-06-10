@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import { registerValid, loginValid } from "../validations/User.validations.js";
 import dotenv from "dotenv";
 dotenv.config();
-
+// save refresh token in list
 let listToken = [];
 // REGISTER
 export const registerUser = async (req, res) => {
@@ -119,6 +119,7 @@ export const loginUser = async (req, res) => {
         message: "Success!",
         ...others,
         accsessToken: accessToken,
+        //refreshToken: refreshToken,
       });
     }
   } catch (error) {
@@ -129,9 +130,11 @@ export const loginUser = async (req, res) => {
   }
 };
 
+// REFRESH TOKEN AFTER ACCESS TOKEN het han
 export const requestRefreshToken = async (req, res) => {
   // lay token tu user luu  o  cookie
   const refreshToken = req.cookie.refreshToken;
+
   if (!refreshToken) {
     return res.status(401).json({
       message: "You not not authenticated",
@@ -149,7 +152,10 @@ export const requestRefreshToken = async (req, res) => {
         message: err.message,
       });
     }
+    // loc bo resfresh toen cu di
     listToken = listToken.filter((token) => token !== refreshToken);
+
+    // create lai token : access token va refresh token
     const newAccessToken = jwt.sign(
       {
         id: user._id,
@@ -160,6 +166,7 @@ export const requestRefreshToken = async (req, res) => {
         expiresIn: "1h",
       }
     );
+    // access token nay se luu trong redux ben frontend
     const newRefreshToken = jwt.sign(
       {
         id: user._id,
@@ -170,13 +177,17 @@ export const requestRefreshToken = async (req, res) => {
         expiresIn: "365d",
       }
     );
+    // luu vao cookie cua user va 1 ben server
     res.cookie("refreshToken", newRefreshToken, {
       httpOnly: true,
       secure: false,
       path: "/",
       sameSite: "strict",
     });
+    // add lai resfresh token moi
     listToken.push(newRefreshToken);
+
+    // response user ben clent
     return res.status(200).json({
       accessToken: newAccessToken,
     });

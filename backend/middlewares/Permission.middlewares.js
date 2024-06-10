@@ -8,7 +8,7 @@ export const verifyToken = (req, res, next) => {
   if (token) {
     const accessToken = token.split(" ")[1];
     jwt.verify(accessToken, process.env.SECRETKEY_ACCESS_KEY, (err, user) => {
-      // user : cai id va admin luc sign
+      // user : cai id va admin luc signin
       if (err) {
         return res.status(403).json({
           message: "Token is not valid",
