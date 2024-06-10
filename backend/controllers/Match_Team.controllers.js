@@ -1,4 +1,4 @@
-import MatchTeam from "../models/Match_Team.model.js";
+import MatchTeam from "../models/TeamMatch.model.js";
 import Match from "../models/Match.model.js";
 import Team from "../models/Team.model.js";
 import Player from "../models/Player.model.js";
@@ -41,7 +41,7 @@ export const getMatchTeamsByMatchId = async (req, res) => {
 export const getMatchTeamByIdTeam = async (req, res) => {
     try {
         const { id } = req.params;
-        const matchteam = await MatchTeam.findOne({ ID_team: id });
+        const matchteam = await MatchTeam.findOne({ team: id });
         if (!matchteam) {
             return res.status(404).json({ message: "Matchteam not found" });
           }
@@ -56,7 +56,7 @@ export const getMatchTeamByIdTeam = async (req, res) => {
 
 export const createMatchTeam = async (req, res) => {
     try {
-        const { date, ID_season, teamId1, teamId2, stadium, description } = req.body;
+        const { date, season, teamId1, teamId2, stadium, description } = req.body;
 
         const team1 = await Team.findById(teamId1 ).exec();
         const team2 = await Team.findById(teamId2).exec();
@@ -71,7 +71,7 @@ export const createMatchTeam = async (req, res) => {
         // Tạo mới đối tượng match
         const newMatch = new Match({
             date: date,
-            ID_season: ID_season,
+            season: season,
             stadium: stadium,
             description: description,
             players: players
@@ -93,7 +93,7 @@ export const createMatchTeam = async (req, res) => {
         // Tạo mới đối tượng matchteam thứ nhất với idmatch đã lấy
         const matchteam1 = new MatchTeam({
             match: matchId,
-            ID_team: teamId1,
+            team: teamId1,
             status: 0,
             score: 0,
         });
@@ -101,7 +101,7 @@ export const createMatchTeam = async (req, res) => {
         // Tạo mới đối tượng matchteam thứ hai với idmatch đã lấy
         const matchteam2 = new MatchTeam({
             match: matchId,
-            ID_team: teamId2,
+            team: teamId2,
             status: 0,
             score: 0,
         });

@@ -1,5 +1,5 @@
 import Match from "../models/Match.model.js";
-import MatchTeam from "../models/Match_Team.model.js";
+import MatchTeam from "../models/TeamMatch.model.js";
 import Season from "../models/Season.model.js";
 import Player from "../models/Player.model.js";
 
@@ -48,7 +48,7 @@ export const getMatchById = async (req, res) => {
 export const getMatchByIdSS = async (req, res) => {
     try {
       const ID_season = req.params.id;
-      const match = await Match.find({ID_season: ID_season});
+      const match = await Match.find({season: ID_season});
       if (!match) {
         return res.status(404).json({ match: "Match not found" });
       }
@@ -75,8 +75,8 @@ export const updateMatch = async (req, res) => {
     }
 
     // const updatedMatchTeam1 = await MatchTeam.findOneAndUpdate(
-    //   { ID_match: matchId, ID_team: id1 }, 
-    //   { ID_team: teamId1 },  
+    //   { ID_match: matchId, team: id1 }, 
+    //   { team: teamId1 },  
     //   { new: true }  
     // );
     // if (!updatedMatchTeam1) {
@@ -84,8 +84,8 @@ export const updateMatch = async (req, res) => {
     // }
 
     // const updatedMatchTeam2 = await MatchTeam.findOneAndUpdate(
-    //   { ID_match: matchId, ID_team: id2 }, 
-    //   { ID_team: teamId2 },  
+    //   { ID_match: matchId, team: id2 }, 
+    //   { team: teamId2 },  
     //   { new: true }  
     // );
     
@@ -138,7 +138,7 @@ export const getRanking = async (req, res) => {
 
   try {
       // Lấy tất cả các trận đấu thuộc mùa giải cụ thể
-      const matches = await Match.find({ ID_season: seasonId }).exec();
+      const matches = await Match.find({ season: seasonId }).exec();
 
       // Khởi tạo một đối tượng để lưu điểm số của từng đội
       const teamScores = {};
@@ -152,18 +152,18 @@ export const getRanking = async (req, res) => {
           if (matchTeams.length === 2) {
               // So sánh goal của 2 đội và cập nhật điểm cho từng đội
               if (matchTeams[0].goal > matchTeams[1].goal) {
-                  teamScores[matchTeams[0].ID_team] = (teamScores[matchTeams[0].ID_team] || 0) + 3;
+                  teamScores[matchTeams[0].team] = (teamScores[matchTeams[0].team] || 0) + 3;
               } else if (matchTeams[0].goal < matchTeams[1].goal) {
-                  teamScores[matchTeams[1].ID_team] = (teamScores[matchTeams[1].ID_team] || 0) + 3;
+                  teamScores[matchTeams[1].team] = (teamScores[matchTeams[1].team] || 0) + 3;
               } else {
-                  teamScores[matchTeams[0].ID_team] = (teamScores[matchTeams[0].ID_team] || 0) + 1;
-                  teamScores[matchTeams[1].ID_team] = (teamScores[matchTeams[1].ID_team] || 0) + 1;
+                  teamScores[matchTeams[0].team] = (teamScores[matchTeams[0].team] || 0) + 1;
+                  teamScores[matchTeams[1].team] = (teamScores[matchTeams[1].team] || 0) + 1;
               }
           }
       }
 
       // Chuyển đổi teamScores thành mảng các đội với điểm số
-      const teams = Object.keys(teamScores).map(teamId => ({ ID_team: teamId, score: teamScores[teamId] }));
+      const teams = Object.keys(teamScores).map(teamId => ({ team: teamId, score: teamScores[teamId] }));
 
       // Sắp xếp các đội theo điểm số từ cao đến thấp
       teams.sort((a, b) => b.score - a.score);

@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const teamSeasonSchema = new mongoose.Schema({
-    ID_season: {
+    season: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Season"
     },
-    ID_team: {
+    team: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Team"
     }

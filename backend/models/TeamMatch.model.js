@@ -4,7 +4,7 @@ const matchTeamSchema = new mongoose.Schema({
         type: Schema.Types.ObjectId,
         ref: 'Match'
     },
-    ID_team: {
+    team: {
         type: Schema.Types.ObjectId,
         ref: 'Team'
     },

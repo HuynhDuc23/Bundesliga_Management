@@ -22,7 +22,7 @@
                 <div class="overlay" id="overlay"></div>
 
                 <form class="match-form" id="addMatchForm">
-                    <input type="hidden" id="ID_season" name="ID_season" value="<%= data.ID_season %>">
+                    <input type="hidden" id="season" name="season" value="<%= data.season %>">
                     <div class="input-container">
                         <div>
                             <label for="teamId1">Home Team:</label>
@@ -82,7 +82,7 @@
                 const submitButton = document.getElementById('addMatchSubmitButton');
                 const overlay = document.getElementById('overlay');
                 const matchContainer = document.getElementById('matchContainer');
-                const seasonId = '<%= data.ID_season %>';
+                const seasonId = '<%= data.season %>';
                 const teamId1Select = document.getElementById('teamId1');
                 const teamId2Select = document.getElementById('teamId2');
 
@@ -138,6 +138,7 @@
                         const {
                             match
                         } = await matchResponse.json();
+console.log(match);
 
                         // Duyệt qua từng trận đấu và hiển thị thông tin
                         for (const matchItem of match) {
@@ -154,7 +155,7 @@
                                 matchTeams
                             } = await matchTeamsResponse.json();
 
-                            var idteam1 = matchTeams[0].ID_team;
+                            var idteam1 = matchTeams[0].team;
                             // Lấy thông tin chi tiết của đội bóng từ API 3
                             const teamAResponse = await fetch(`/api/v1/team/view/idteam/${idteam1}`, {
                                 method: 'GET',
@@ -167,7 +168,7 @@
                                 team: teamA
                             } = await teamAResponse.json();
 
-                            var idteam2 = matchTeams[1].ID_team;
+                            var idteam2 = matchTeams[1].team;
                             const teamBResponse = await fetch(`/api/v1/team/view/idteam/${idteam2}`, {
                                 method: 'GET',
                                 headers: {
@@ -249,8 +250,8 @@
                             matchTeams
                         } = await matchTeamsResponse.json();
 
-                        var idteam1 = matchTeams[0].ID_team;
-                        var idteam2 = matchTeams[1].ID_team;
+                        var idteam1 = matchTeams[0].team;
+                        var idteam2 = matchTeams[1].team;
 
                         // Điền thông tin vào form
                         document.getElementById('teamId1').value = idteam1;

@@ -14,7 +14,7 @@ export const getTeamInSeasonById = async (req, res) => {
     }
     // Lấy thông tin về các đội trong mùa
     const dataTeamSeasons = await TeamSeason.find({
-      ID_season: idSeason
+      season: idSeason
     });
     console.log(dataTeamSeasons);
     if (!dataTeamSeasons || dataTeamSeasons.length === 0) {
@@ -23,7 +23,7 @@ export const getTeamInSeasonById = async (req, res) => {
       });
     }
     // Lấy thông tin về từng đội
-    const teamIds = dataTeamSeasons.map((teamSeason) => teamSeason.ID_team);
+    const teamIds = dataTeamSeasons.map((teamSeason) => teamSeason.team);
     const dataTeams = await Team.find({
       _id: {
         $in: teamIds
@@ -32,7 +32,7 @@ export const getTeamInSeasonById = async (req, res) => {
     console.log("Data team: "+dataTeams)
     return res.status(200).render("pages/addMatch",{
       data: {
-        ID_season: idSeason,
+        season: idSeason,
         teams: dataTeams,
       },
     });
